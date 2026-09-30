@@ -3,7 +3,7 @@ import { useState, type FormEvent } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { lovable } from '@/integrations/lovable/index';
 import { Button } from '@/components/ui/button';
-import logo from '@/assets/talentiq360-mark.png.asset.json';
+import logo from '@/assets/talentiq360-symbol.png.asset.json';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
 
 export const Route = createFileRoute('/auth')({

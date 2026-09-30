@@ -9,8 +9,10 @@ function Field() {
   const uniforms = useMemo(() => ({ uTime: { value: 0 }, uResolution: { value: new THREE.Vector2(1, 1) } }), []);
   useFrame(({ clock, size }) => {
     if (!material.current) return;
-    material.current.uniforms.uTime.value = clock.elapsedTime;
-    material.current.uniforms.uResolution.value.set(size.width, size.height);
+    const time = material.current.uniforms['uTime'];
+    if (time) time.value = clock.elapsedTime;
+    const resolution = material.current.uniforms['uResolution'];
+    if (resolution) resolution.value.set(size.width, size.height);
   });
   return <mesh>
     <planeGeometry args={[2, 2]} />
