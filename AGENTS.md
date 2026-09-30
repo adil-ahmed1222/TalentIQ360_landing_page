@@ -8,3 +8,6 @@
 > Commits you push to the connected branch sync back to Lovable and show up in
 > the editor, so keep the branch in a working state.
 <!-- LOVABLE:END -->
+
+- Keep the TalentIQ360 marketing experience on the root route with anchored sections; this makes the public homepage the primary conversion entry point.
+- Keep checkout server-verified and do not simulate successful payments; payment status must come from Razorpay verification.
