@@ -1,54 +1,134 @@
-import { Canvas, useFrame } from '@react-three/fiber';
-import { useMemo, useRef } from 'react';
-import * as THREE from 'three';
+import { useEffect, useRef } from 'react';
 
-/* The brief references an AetherHero source file, but no shader source was attached.
-   This original, lightweight field is a visual substitute until that source is provided. */
-function Field() {
-  const material = useRef<THREE.ShaderMaterial>(null);
-  const uniforms = useMemo(() => ({ uTime: { value: 0 }, uResolution: { value: new THREE.Vector2(1, 1) } }), []);
-  useFrame(({ clock, size }) => {
-    if (!material.current) return;
-    const time = material.current.uniforms['uTime'];
-    if (time) time.value = clock.elapsedTime;
-    const resolution = material.current.uniforms['uResolution'];
-    if (resolution) resolution.value.set(size.width, size.height);
-  });
-  return <mesh>
-    <planeGeometry args={[2, 2]} />
-    <shaderMaterial ref={material} uniforms={uniforms} depthWrite={false}
-      vertexShader={`void main() { gl_Position = vec4(position, 1.0); }`}
-      fragmentShader={`
-        uniform float uTime;
-        uniform vec2 uResolution;
-        float line(vec2 p, float offset) {
-          float y = sin(p.x * 5.2 + offset + uTime * .22) * .085 + sin(p.x * 12. + offset * 2. - uTime * .13) * .025;
-          return exp(-abs(p.y-y-offset*.025)*95.);
-        }
-        void main() {
-          vec2 uv = gl_FragCoord.xy / uResolution.xy;
-          vec2 p = (gl_FragCoord.xy - .5*uResolution.xy) / min(uResolution.x,uResolution.y);
-          vec3 bg = mix(vec3(.024,.038,.092), vec3(.018,.028,.061), uv.y);
-          float veil = exp(-length((p-vec2(.32,-.16))*vec2(.95,1.5))*2.5);
-          bg += vec3(.035,.092,.19)*veil;
-          float glow = 0.;
-          for(int i=0; i<19; i++) {
-            float f = float(i);
-            float x = p.x + f*.018;
-            float ribbon = line(vec2(x, p.y - .08*sin(x*1.8+uTime*.12)), f*.13-1.2);
-            glow += ribbon * (.36 + .3*sin(f*.33+uTime*.14));
-          }
-          bg += vec3(.055,.21,.48)*glow*.16;
-          bg += vec3(.20,.10,.42)*glow*.08;
-          float grid = (1.-smoothstep(.002,.005,abs(fract(p.x*15.)-.5)))*.014;
-          bg += vec3(grid);
-          gl_FragColor = vec4(bg,1.);
-        }
-      `}
-    />
-  </mesh>;
+// The fragment shader supplied for the AetherHero background.
+const fragmentSource = `#version 300 es
+precision highp float;
+out vec4 O;
+uniform float time;
+uniform vec2 resolution;
+#define FC gl_FragCoord.xy
+#define R resolution
+#define T time
+#define S smoothstep
+#define MN min(R.x,R.y)
+float pattern(vec2 uv) {
+  float d=.0;
+  for (float i=.0; i<3.; i++) {
+    uv.x+=sin(T*(1.+i)+uv.y*1.5)*.2;
+    d+=.005/abs(uv.x);
+  }
+  return d;
+}
+vec3 scene(vec2 uv) {
+  vec3 col=vec3(0);
+  uv=vec2(atan(uv.x,uv.y)*2./6.28318,-log(length(uv))+T);
+  for (float i=.0; i<3.; i++) {
+    int k=int(mod(i,3.));
+    col[k]+=pattern(uv+i*6./MN);
+  }
+  return col;
+}
+void main() {
+  vec2 uv=(FC-.5*R)/MN;
+  vec3 col=vec3(0);
+  float s=12., e=9e-4;
+  col+=e/(sin(uv.x*s)*cos(uv.y*s));
+  uv.y+=R.x>R.y?.5:.5*(R.y/R.x);
+  col+=scene(uv);
+  O=vec4(col,1.);
+}`;
+
+const vertexSource = `#version 300 es
+precision highp float;
+in vec2 position;
+void main(){ gl_Position = vec4(position, 0.0, 1.0); }
+`;
+
+function compile(gl: WebGL2RenderingContext, type: number, source: string) {
+  const shader = gl.createShader(type);
+  if (!shader) return null;
+  gl.shaderSource(shader, source);
+  gl.compileShader(shader);
+  if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+    console.error('Aether shader:', gl.getShaderInfoLog(shader));
+    gl.deleteShader(shader);
+    return null;
+  }
+  return shader;
 }
 
 export default function AetherHero() {
-  return <div className="aether-canvas" aria-hidden="true"><Canvas orthographic camera={{ position: [0, 0, 1], zoom: 1 }} dpr={[1, 1.5]} gl={{ antialias: false, powerPreference: 'low-power' }}><Field /></Canvas></div>;
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    const gl = canvas?.getContext('webgl2', { alpha: false, antialias: false, powerPreference: 'low-power' });
+    if (!canvas || !gl) return;
+
+    const vertex = compile(gl, gl.VERTEX_SHADER, vertexSource);
+    const fragment = compile(gl, gl.FRAGMENT_SHADER, fragmentSource);
+    if (!vertex || !fragment) {
+      if (vertex) gl.deleteShader(vertex);
+      if (fragment) gl.deleteShader(fragment);
+      return;
+    }
+
+    const program = gl.createProgram();
+    if (!program) { gl.deleteShader(vertex); gl.deleteShader(fragment); return; }
+    gl.attachShader(program, vertex);
+    gl.attachShader(program, fragment);
+    gl.linkProgram(program);
+    gl.deleteShader(vertex);
+    gl.deleteShader(fragment);
+    if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
+      console.error('Aether program:', gl.getProgramInfoLog(program));
+      gl.deleteProgram(program);
+      return;
+    }
+
+    const buffer = gl.createBuffer();
+    if (!buffer) { gl.deleteProgram(program); return; }
+    gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, 1, -1, -1, 1, 1, 1, -1]), gl.STATIC_DRAW);
+    gl.useProgram(program);
+    const position = gl.getAttribLocation(program, 'position');
+    gl.enableVertexAttribArray(position);
+    gl.vertexAttribPointer(position, 2, gl.FLOAT, false, 0, 0);
+    const time = gl.getUniformLocation(program, 'time');
+    const resolution = gl.getUniformLocation(program, 'resolution');
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+    const resize = () => {
+      const { width, height } = canvas.getBoundingClientRect();
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      canvas.width = Math.max(1, Math.floor(width * dpr));
+      canvas.height = Math.max(1, Math.floor(height * dpr));
+      gl.viewport(0, 0, canvas.width, canvas.height);
+    };
+    resize();
+    const observer = new ResizeObserver(resize);
+    observer.observe(canvas);
+
+    let frame = 0;
+    const draw = (now: number) => {
+      gl.useProgram(program);
+      gl.uniform2f(resolution, canvas.width, canvas.height);
+      gl.uniform1f(time, reducedMotion.matches ? 0 : now * 0.001);
+      gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+      if (!reducedMotion.matches) frame = requestAnimationFrame(draw);
+    };
+    frame = requestAnimationFrame(draw);
+    const onMotionChange = () => { cancelAnimationFrame(frame); frame = requestAnimationFrame(draw); };
+    reducedMotion.addEventListener('change', onMotionChange);
+
+    return () => {
+      cancelAnimationFrame(frame);
+      reducedMotion.removeEventListener('change', onMotionChange);
+      observer.disconnect();
+      gl.deleteBuffer(buffer);
+      gl.deleteProgram(program);
+    };
+  }, []);
+
+  return <canvas ref={canvasRef} className="aether-canvas" aria-hidden="true" />;
 }
