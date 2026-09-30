@@ -45,3 +45,57 @@ body { margin: 0; background: var(--background); color: var(--foreground); font-
 @keyframes float { 50% { transform: translateY(-7px); } }
 .float-slow { animation: float 5s ease-in-out infinite; }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior:auto; } *, *::before, *::after { animation-duration:.01ms !important; transition-duration:.01ms !important; } }
+
+/* ===== Premium layer ===== */
+h1,h2,h3 { letter-spacing: -0.025em; }
+h2 { font-feature-settings: "ss01"; }
+.glass-panel { position: relative; isolation: isolate; box-shadow: 0 1px 0 color-mix(in oklch, var(--foreground) 6%, transparent) inset, 0 20px 50px -30px color-mix(in oklch, var(--primary) 45%, transparent); transition: transform .35s cubic-bezier(.2,.8,.2,1), box-shadow .35s ease, border-color .35s ease, background .35s ease; }
+main .glass-panel::before { content:""; position:absolute; inset:0; border-radius:inherit; z-index:-1; pointer-events:none; opacity:0; transition: opacity .3s ease; background: radial-gradient(420px circle at var(--mx,50%) var(--my,50%), color-mix(in oklch, var(--primary) 16%, transparent), transparent 55%); }
+main .glass-panel::after { content:""; position:absolute; inset:-1px; border-radius:inherit; padding:1px; pointer-events:none; opacity:0; transition: opacity .3s ease; background: radial-gradient(260px circle at var(--mx,50%) var(--my,50%), var(--highlight), var(--primary) 40%, transparent 70%); -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask-composite: exclude; }
+main .glass-panel:hover::before, main .glass-panel:hover::after { opacity:1; }
+main .glass-panel:hover { box-shadow: 0 30px 70px -30px color-mix(in oklch, var(--primary) 60%, transparent); }
+.feature-tile:hover { background: color-mix(in oklch, var(--card) 80%, transparent); }
+
+.liquid-btn, .liquid-ghost { position:relative; overflow:hidden; isolation:isolate; transition: transform .3s cubic-bezier(.2,.8,.2,1), box-shadow .3s ease; }
+.liquid-btn { background: linear-gradient(120deg, var(--primary), color-mix(in oklch, var(--primary) 55%, var(--highlight)), var(--primary)); background-size: 200% 100%; animation: sheen 6s linear infinite; box-shadow: 0 10px 30px -10px color-mix(in oklch, var(--primary) 70%, transparent), inset 0 1px 0 color-mix(in oklch, var(--foreground) 30%, transparent); }
+.liquid-btn::before, .liquid-ghost::before { content:""; position:absolute; left:var(--bx,50%); top:var(--by,50%); width:0; height:0; border-radius:50%; transform:translate(-50%,-50%); z-index:-1; transition: width .5s ease, height .5s ease; background: radial-gradient(circle, color-mix(in oklch, var(--highlight) 70%, transparent), transparent 70%); }
+.liquid-ghost::before { background: radial-gradient(circle, color-mix(in oklch, var(--primary) 45%, transparent), transparent 70%); }
+.liquid-btn:hover::before, .liquid-ghost:hover::before { width:320px; height:320px; }
+.liquid-btn:hover { box-shadow: 0 16px 44px -10px color-mix(in oklch, var(--highlight) 60%, transparent), 0 0 0 1px color-mix(in oklch, var(--highlight) 50%, transparent); }
+.liquid-ghost:hover { border-color: var(--primary); }
+.liquid-btn:active, .liquid-ghost:active { scale: .97; }
+.ripple { position:absolute; width:12px; height:12px; border-radius:50%; background: color-mix(in oklch, var(--foreground) 55%, transparent); transform:translate(-50%,-50%) scale(0); animation: ripple .65s ease-out forwards; pointer-events:none; }
+@keyframes ripple { to { transform:translate(-50%,-50%) scale(28); opacity:0; } }
+@keyframes sheen { to { background-position: -200% 0; } }
+
+header { transition: background .35s ease, box-shadow .35s ease, border-color .35s ease; }
+header.nav-scrolled { background: color-mix(in oklch, var(--background) 62%, transparent) !important; box-shadow: 0 12px 40px -20px color-mix(in oklch, var(--primary) 50%, transparent); }
+@media (min-width: 768px) { header.nav-scrolled { inset-inline: 1rem; top: .6rem; border: 1px solid var(--border); border-radius: 1rem; } }
+header nav a { position:relative; }
+header nav a::after { content:""; position:absolute; left:0; right:0; bottom:-6px; height:2px; border-radius:2px; background: linear-gradient(90deg, var(--primary), var(--highlight)); transform: scaleX(0); transition: transform .3s ease; }
+header nav a:hover::after, header nav a.nav-active::after { transform: scaleX(1); }
+header nav a.nav-active { color: var(--foreground); }
+
+.reveal { opacity:0; translate: 0 24px; filter: blur(6px); transition: opacity .8s ease var(--d,0ms), translate .8s cubic-bezier(.2,.8,.2,1) var(--d,0ms), filter .8s ease var(--d,0ms); }
+.reveal.in { opacity:1; translate:0 0; filter:none; }
+.hero-copy > * { animation: rise .9s cubic-bezier(.2,.8,.2,1) both; }
+.hero-copy > *:nth-child(2) { animation-delay:.08s } .hero-copy > *:nth-child(3) { animation-delay:.16s } .hero-copy > *:nth-child(4) { animation-delay:.24s } .hero-copy > *:nth-child(5) { animation-delay:.32s } .hero-copy > *:nth-child(6) { animation-delay:.4s }
+@keyframes rise { from { opacity:0; transform: translateY(28px); filter: blur(8px); } }
+.stat-gradient { background: linear-gradient(90deg, var(--foreground), var(--highlight)); -webkit-background-clip:text; background-clip:text; color:transparent; }
+
+.orb { position:absolute; border-radius:50%; filter: blur(70px); opacity:.45; mix-blend-mode: screen; animation: drift 18s ease-in-out infinite alternate; }
+.orb-a { width:420px; height:420px; left:-8%; top:10%; background: var(--primary); }
+.orb-b { width:340px; height:340px; right:-6%; top:-10%; background: var(--highlight); opacity:.25; animation-duration:22s; }
+.orb-c { width:300px; height:300px; left:40%; bottom:-20%; background: color-mix(in oklch, var(--primary) 60%, var(--destructive)); opacity:.2; animation-duration:26s; }
+@keyframes drift { to { transform: translate(60px, -40px) scale(1.15); } }
+.particle { position:absolute; bottom:-10px; width:3px; height:3px; border-radius:50%; background: var(--highlight); box-shadow: 0 0 8px var(--highlight); opacity:0; animation: particle linear infinite; }
+@keyframes particle { 10% { opacity:.8 } 90% { opacity:.4 } to { transform: translateY(-95vh); opacity:0; } }
+.hero-widget { position:absolute; padding:.75rem 1rem; border-radius:.9rem; font-size:.75rem; background: color-mix(in oklch, var(--card) 55%, transparent); border:1px solid var(--border); backdrop-filter: blur(16px); box-shadow: 0 20px 50px -20px color-mix(in oklch, var(--primary) 60%, transparent); animation: float 6s ease-in-out infinite; }
+.live-dot { display:inline-block; width:7px; height:7px; border-radius:50%; background: var(--highlight); margin-right:.4rem; box-shadow: 0 0 0 0 var(--highlight); animation: pulse-dot 1.8s infinite; }
+@keyframes pulse-dot { 70% { box-shadow: 0 0 0 8px transparent; } }
+.mini-bars { display:flex; align-items:flex-end; gap:4px; height:34px; margin-top:.6rem; }
+.mini-bars i { flex:1; width:10px; border-radius:3px; background: linear-gradient(var(--highlight), var(--primary)); animation: bar 2.4s ease-in-out infinite; }
+.mini-bars i:nth-child(1){height:40%} .mini-bars i:nth-child(2){height:70%;animation-delay:.2s} .mini-bars i:nth-child(3){height:55%;animation-delay:.4s} .mini-bars i:nth-child(4){height:90%;animation-delay:.6s} .mini-bars i:nth-child(5){height:65%;animation-delay:.8s} .mini-bars i:nth-child(6){height:80%;animation-delay:1s}
+@keyframes bar { 50% { transform: scaleY(.6); } }
+.mini-bars i { transform-origin: bottom; }
+@media (prefers-reduced-motion: reduce) { .reveal { opacity:1; translate:none; filter:none; } .particle, .orb { display:none; } }
