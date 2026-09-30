@@ -11,3 +11,6 @@
 
 - Keep the TalentIQ360 marketing experience on the root route with anchored sections; this makes the public homepage the primary conversion entry point.
 - Keep checkout server-verified and do not simulate successful payments; payment status must come from Razorpay verification.
+- Store public contact requests in Cloud with insert-only visitor access; this allows a real inquiry flow without exposing submissions.
+- Offer email/password and managed Google sign-in on the public auth page; these methods work with Cloud's configured providers.
+- Treat the hero shader as an original substitute until the referenced AetherHero source is supplied; the uploaded brief contains requirements but no shader code.

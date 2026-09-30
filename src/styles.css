@@ -29,7 +29,7 @@ html { scroll-behavior: smooth; }
 body { margin: 0; background: var(--background); color: var(--foreground); font-family: var(--font-sans); }
 ::selection { background: var(--primary); color: var(--primary-foreground); }
 @utility section-wrap { width: min(100% - 3rem, 1200px); margin-inline: auto; }
-@utility eyebrow { text-transform: uppercase; letter-spacing: .18em; font-size: .72rem; font-weight: 700; color: var(--highlight); }
+@utility eyebrow { text-transform: uppercase; letter-spacing: 0; font-size: .72rem; font-weight: 700; color: var(--highlight); }
 @utility glass-panel { background: color-mix(in oklch, var(--card) 70%, transparent); border: 1px solid var(--border); backdrop-filter: blur(18px); }
 @utility text-balance { text-wrap: balance; }
 @utility soft-grid { background-image: linear-gradient(to right, color-mix(in oklch, var(--border) 32%, transparent) 1px, transparent 1px), linear-gradient(to bottom, color-mix(in oklch, var(--border) 32%, transparent) 1px, transparent 1px); background-size: 56px 56px; }
