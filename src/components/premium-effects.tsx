@@ -75,7 +75,7 @@ function Counter({ to, decimals = 0, suffix }: { to: number; decimals?: number; 
   useEffect(() => {
     const el = ref.current; if (!el) return;
     const io = new IntersectionObserver(([en]) => {
-      if (!en.isIntersecting) return; io.disconnect();
+      if (!en?.isIntersecting) return; io.disconnect();
       const start = performance.now(), dur = 1600;
       const tick = (n: number) => { const p = Math.min(1, (n - start) / dur); setV(to * (1 - Math.pow(1 - p, 3))); if (p < 1) requestAnimationFrame(tick); };
       requestAnimationFrame(tick);
