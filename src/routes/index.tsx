@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from '@tanstack/react-router';
 import { lazy, Suspense, useState, type FormEvent } from 'react';
-import { ArrowRight, ArrowUpRight, Check, ChevronDown, CircleDot, Command, Github, Layers3, Menu, ShieldCheck, Sparkles, X, Zap, Activity, BrainCircuit, ChartNoAxesCombined, GitBranch, UsersRound, Target, HeartPulse, Gauge, TrendingUp, LayoutDashboard, Lightbulb, CalendarDays, Mail } from 'lucide-react';
+import { ArrowRight, ArrowUpRight, Check, ChevronDown, CircleDot, Github, Layers3, Menu, Sparkles, X, Activity, BrainCircuit, ChartNoAxesCombined, UsersRound, Target, HeartPulse, Gauge, TrendingUp, LayoutDashboard, Lightbulb, CalendarDays, Mail } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import logo from '@/assets/talentiq360-mark.png.asset.json';
 import { supabase } from '@/integrations/supabase/client';
