@@ -1,0 +1,2 @@
+GRANT SELECT ON public.payment_records TO authenticated;
+CREATE POLICY "Customers can view their own payment records" ON public.payment_records FOR SELECT TO authenticated USING (user_id = auth.uid());
