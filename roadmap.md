@@ -4,5 +4,5 @@
 - [x] Add working contact requests and account creation/sign-in with Cloud.
 - [x] Verify desktop and mobile presentation and contact request readback.
 - [ ] Razorpay checkout and payment verification — blocked by missing Razorpay test key ID and secret.
-- [ ] Replace substitute shader with exact AetherHero — blocked by missing component source.
+- [x] Replace substitute background with the supplied AetherHero shader across the full opening section.
 - [ ] Add real testimonials, privacy/terms pages, and official social links — blocked by missing approved quotes, legal copy, and account URLs.
