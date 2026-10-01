@@ -122,3 +122,11 @@ header nav a.nav-active { color: var(--foreground); }
 @keyframes pl-wave { from { transform: scale(1); opacity: .8; } to { transform: scale(2.2); opacity: 0; } }
 @keyframes pl-in { 0% { transform: translate(var(--x), var(--y)); opacity: 0; } 30% { opacity: 1; } 100% { transform: translate(0, 0) scale(.3); opacity: 0; } }
 @keyframes pl-failsafe { to { opacity: 0; visibility: hidden; pointer-events: none; } }
+@media (max-width: 639px) {
+  .preloader { padding: 1rem; gap: 1rem; }
+  .preloader-particle:nth-child(2n) { display: none; }
+  .preloader-particle { --x: calc(var(--x) * .6); }
+  .preloader-logo { width: 76px; height: 76px; }
+  .preloader-metrics { gap: .6rem 1rem; width: 100%; max-width: 20rem; }
+  .preloader-aurora { filter: blur(24px); }
+}
