@@ -24,12 +24,12 @@ const KEY = 'tiq360-booted';
 
 const NODES = Array.from({ length: 12 }, (_, i) => {
   const a = (i / 12) * Math.PI * 2;
-  const r = i % 2 ? 120 : 92;
+  const r = i % 2 ? 118 : 92;
   return { x: 150 + Math.cos(a) * r, y: 150 + Math.sin(a) * r };
 });
 const PARTICLES = Array.from({ length: 22 }, (_, i) => {
   const a = (i / 22) * Math.PI * 2 + (i % 3);
-  return { x: Math.cos(a) * 190, y: Math.sin(a) * 190, d: (i % 6) * 0.18 };
+  return { x: Math.cos(a) * 160, y: Math.sin(a) * 160, d: (i % 6) * 0.18 };
 });
 
 function fmt(v: number, target: number) {
