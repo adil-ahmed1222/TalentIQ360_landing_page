@@ -23,6 +23,7 @@
   --muted-foreground: oklch(.69 .025 255); --accent: oklch(.25 .04 257);
   --border: oklch(.32 .028 260 / .57); --highlight: oklch(.76 .135 185);
   --destructive: oklch(.65 .19 24); --radius: .5rem;
+  --metal-face: oklch(.19 .014 265); --metal-edge: oklch(.82 .012 250);
 }
 * { border-color: var(--border); }
 html { scroll-behavior: smooth; }
@@ -56,17 +57,14 @@ main .glass-panel:hover::before, main .glass-panel:hover::after { opacity:1; }
 main .glass-panel:hover { box-shadow: 0 30px 70px -30px color-mix(in oklch, var(--primary) 60%, transparent); }
 .feature-tile:hover { background: color-mix(in oklch, var(--card) 80%, transparent); }
 
-.liquid-btn, .liquid-ghost { position:relative; overflow:hidden; isolation:isolate; transition: transform .3s cubic-bezier(.2,.8,.2,1), box-shadow .3s ease; }
-.liquid-btn { background: linear-gradient(120deg, var(--primary), color-mix(in oklch, var(--primary) 55%, var(--highlight)), var(--primary)); background-size: 200% 100%; animation: sheen 6s linear infinite; box-shadow: 0 10px 30px -10px color-mix(in oklch, var(--primary) 70%, transparent), inset 0 1px 0 color-mix(in oklch, var(--foreground) 30%, transparent); }
-.liquid-btn::before, .liquid-ghost::before { content:""; position:absolute; left:var(--bx,50%); top:var(--by,50%); width:0; height:0; border-radius:50%; transform:translate(-50%,-50%); z-index:-1; transition: width .5s ease, height .5s ease; background: radial-gradient(circle, color-mix(in oklch, var(--highlight) 70%, transparent), transparent 70%); }
-.liquid-ghost::before { background: radial-gradient(circle, color-mix(in oklch, var(--primary) 45%, transparent), transparent 70%); }
-.liquid-btn:hover::before, .liquid-ghost:hover::before { width:320px; height:320px; }
-.liquid-btn:hover { box-shadow: 0 16px 44px -10px color-mix(in oklch, var(--highlight) 60%, transparent), 0 0 0 1px color-mix(in oklch, var(--highlight) 50%, transparent); }
-.liquid-ghost:hover { border-color: var(--primary); }
-.liquid-btn:active, .liquid-ghost:active { scale: .97; }
-.ripple { position:absolute; width:12px; height:12px; border-radius:50%; background: color-mix(in oklch, var(--foreground) 55%, transparent); transform:translate(-50%,-50%) scale(0); animation: ripple .65s ease-out forwards; pointer-events:none; }
-@keyframes ripple { to { transform:translate(-50%,-50%) scale(28); opacity:0; } }
-@keyframes sheen { to { background-position: -200% 0; } }
+.liquid-metal { position:relative; isolation:isolate; overflow:hidden; border-radius:999px; background:var(--metal-edge); box-shadow: 0 2px 3px color-mix(in oklch, var(--background) 80%, transparent), 0 12px 18px -12px color-mix(in oklch, var(--metal-edge) 50%, transparent); transition:transform .2s ease, box-shadow .2s ease; }
+.liquid-metal:hover { transform:translateY(-2px); box-shadow: 0 4px 5px color-mix(in oklch, var(--background) 80%, transparent), 0 14px 22px -10px color-mix(in oklch, var(--metal-edge) 60%, transparent); }
+.liquid-metal:active { transform:translateY(1px) scale(.98); }
+.liquid-metal-surface { position:absolute; inset:0; pointer-events:none; border-radius:inherit; overflow:hidden; background:linear-gradient(125deg, var(--metal-edge), var(--muted), var(--foreground), var(--metal-edge)); }
+.liquid-metal-surface canvas { width:100% !important; height:100% !important; display:block !important; }
+.liquid-metal-face { position:absolute; inset:2px; pointer-events:none; border-radius:inherit; background:linear-gradient(180deg, color-mix(in oklch, var(--metal-face) 94%, transparent), var(--background)); box-shadow:inset 0 1px 2px color-mix(in oklch, var(--background) 70%, transparent); }
+.liquid-metal-label { position:relative; z-index:1; display:inline-flex; align-items:center; justify-content:center; gap:.5rem; white-space:nowrap; }
+.liquid-metal:focus-visible { outline:2px solid var(--highlight); outline-offset:3px; }
 
 header { transition: background .35s ease, box-shadow .35s ease, border-color .35s ease; }
 header.nav-scrolled { background: color-mix(in oklch, var(--background) 62%, transparent) !important; box-shadow: 0 12px 40px -20px color-mix(in oklch, var(--primary) 50%, transparent); }
@@ -98,4 +96,4 @@ header nav a.nav-active { color: var(--foreground); }
 .mini-bars i:nth-child(1){height:40%} .mini-bars i:nth-child(2){height:70%;animation-delay:.2s} .mini-bars i:nth-child(3){height:55%;animation-delay:.4s} .mini-bars i:nth-child(4){height:90%;animation-delay:.6s} .mini-bars i:nth-child(5){height:65%;animation-delay:.8s} .mini-bars i:nth-child(6){height:80%;animation-delay:1s}
 @keyframes bar { 50% { transform: scaleY(.6); } }
 .mini-bars i { transform-origin: bottom; }
-@media (prefers-reduced-motion: reduce) { .reveal { opacity:1; translate:none; filter:none; } .particle, .orb { display:none; } }
+@media (prefers-reduced-motion: reduce) { .reveal { opacity:1; translate:none; filter:none; } .particle, .orb { display:none; } .liquid-metal:hover, .liquid-metal:active { transform:none; } }

@@ -17,27 +17,11 @@ export function PremiumEffects() {
         card.style.setProperty('--my', `${y * 100}%`);
         if (fine && !reduce && r.width < 520) card.style.transform = `perspective(900px) rotateX(${(0.5 - y) * 6}deg) rotateY(${(x - 0.5) * 6}deg) translateY(-4px)`;
       }
-      const btn = t.closest<HTMLElement>('.liquid-btn, .liquid-ghost');
-      if (btn && fine && !reduce) {
-        const r = btn.getBoundingClientRect();
-        btn.style.setProperty('--bx', `${e.clientX - r.left}px`);
-        btn.style.setProperty('--by', `${e.clientY - r.top}px`);
-        btn.style.transform = `translate(${(e.clientX - r.left - r.width / 2) * 0.15}px, ${(e.clientY - r.top - r.height / 2) * 0.25}px)`;
-      }
     };
     const onOut = (e: PointerEvent) => {
       const t = e.target as HTMLElement | null;
-      const el = t?.closest?.<HTMLElement>('.glass-panel, .liquid-btn, .liquid-ghost');
+      const el = t?.closest?.<HTMLElement>('.glass-panel');
       if (el && !el.contains(e.relatedTarget as Node)) el.style.transform = '';
-    };
-    const onDown = (e: PointerEvent) => {
-      const btn = (e.target as HTMLElement)?.closest?.<HTMLElement>('.liquid-btn, .liquid-ghost');
-      if (!btn || reduce) return;
-      const r = btn.getBoundingClientRect();
-      const s = document.createElement('span');
-      s.className = 'ripple';
-      s.style.left = `${e.clientX - r.left}px`; s.style.top = `${e.clientY - r.top}px`;
-      btn.appendChild(s); setTimeout(() => s.remove(), 650);
     };
     const header = document.querySelector('header');
     const onScroll = () => header?.classList.toggle('nav-scrolled', window.scrollY > 24);
@@ -58,11 +42,10 @@ export function PremiumEffects() {
 
     document.addEventListener('pointermove', onMove, { passive: true });
     document.addEventListener('pointerout', onOut);
-    document.addEventListener('pointerdown', onDown);
     window.addEventListener('scroll', onScroll, { passive: true }); onScroll();
     return () => {
       document.removeEventListener('pointermove', onMove); document.removeEventListener('pointerout', onOut);
-      document.removeEventListener('pointerdown', onDown); window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('scroll', onScroll);
       io.disconnect(); navIo.disconnect();
     };
   }, []);

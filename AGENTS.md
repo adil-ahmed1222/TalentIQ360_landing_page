@@ -14,3 +14,4 @@
 - Store public contact requests in Cloud with insert-only visitor access; this allows a real inquiry flow without exposing submissions.
 - Offer email/password and managed Google sign-in on the public auth page; these methods work with Cloud's configured providers.
 - Use the uploaded AetherHero fragment shader as the full-bleed homepage hero background, keeping the existing TalentIQ360 content above it; the supplied shader is the requested visual source.
+- Render existing primary and glass action controls through the shared Button component with a client-mounted liquid-metal shader surface; this preserves navigation, form semantics, and one consistent visual treatment.

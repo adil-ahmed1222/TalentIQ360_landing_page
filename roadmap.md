@@ -5,4 +5,5 @@
 - [x] Verify desktop and mobile presentation and contact request readback.
 - [ ] Razorpay checkout and payment verification — blocked by missing Razorpay test key ID and secret.
 - [x] Replace substitute background with the supplied AetherHero shader across the full opening section.
+- [x] Apply the supplied liquid-metal shader to existing liquid action buttons without changing their actions.
 - [ ] Add real testimonials, privacy/terms pages, and official social links — blocked by missing approved quotes, legal copy, and account URLs.
