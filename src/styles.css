@@ -99,7 +99,7 @@ header nav a.nav-active { color: var(--foreground); }
 @media (prefers-reduced-motion: reduce) { .reveal { opacity:1; translate:none; filter:none; } .particle, .orb { display:none; } .liquid-metal:hover, .liquid-metal:active { transform:none; } }
 
 /* Preloader */
-.preloader { position: fixed; inset: 0; z-index: 100; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1.5rem; background: var(--background); overflow: hidden; }
+.preloader { animation: pl-failsafe .6s ease 6s forwards; position: fixed; inset: 0; z-index: 100; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1.5rem; background: var(--background); overflow: hidden; }
 .preloader-aurora { position: absolute; inset: -20%; background: radial-gradient(40% 35% at 35% 40%, color-mix(in oklch, var(--primary) 28%, transparent), transparent 70%), radial-gradient(35% 30% at 65% 60%, color-mix(in oklch, var(--accent) 24%, transparent), transparent 70%); filter: blur(40px); animation: pl-aurora 6s ease-in-out infinite alternate; }
 .preloader-core { position: relative; width: min(300px, 72vw); aspect-ratio: 1; display: grid; place-items: center; }
 .preloader-svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
@@ -121,3 +121,4 @@ header nav a.nav-active { color: var(--foreground); }
 @keyframes pl-glow { 50% { filter: drop-shadow(0 0 14px var(--primary)); transform: scale(1.04); } }
 @keyframes pl-wave { from { transform: scale(1); opacity: .8; } to { transform: scale(2.2); opacity: 0; } }
 @keyframes pl-in { 0% { transform: translate(var(--x), var(--y)); opacity: 0; } 30% { opacity: 1; } 100% { transform: translate(0, 0) scale(.3); opacity: 0; } }
+@keyframes pl-failsafe { to { opacity: 0; visibility: hidden; pointer-events: none; } }
