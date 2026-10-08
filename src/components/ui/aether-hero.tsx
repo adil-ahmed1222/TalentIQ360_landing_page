@@ -20,22 +20,31 @@ float pattern(vec2 uv) {
   return d;
 }
 vec3 scene(vec2 uv) {
-  vec3 col=vec3(0);
+  vec3 col=vec3(0.012,0.016,0.04);
   uv=vec2(atan(uv.x,uv.y)*2./6.28318,-log(length(uv))+T);
+  vec3 deep=vec3(0.0,0.1,0.52);
+  vec3 electric=vec3(0.08,0.26,0.96);
+  vec3 purple=vec3(0.42,0.2,0.94);
   for (float i=.0; i<3.; i++) {
-    int k=int(mod(i,3.));
-    col[k]+=pattern(uv+i*6./MN);
+    float p=pattern(uv+i*6./MN);
+    vec3 tint=mix(deep,electric,step(1.,i));
+    tint=mix(tint,purple,step(2.,i));
+    col+=tint*p;
   }
   return col;
 }
 void main() {
   vec2 uv=(FC-.5*R)/MN;
-  vec3 col=vec3(0);
+  vec2 p=uv;
+  vec3 col=vec3(0.015,0.02,0.045);
   float s=12., e=9e-4;
-  col+=e/(sin(uv.x*s)*cos(uv.y*s));
+  float grid=e/(sin(uv.x*s)*cos(uv.y*s));
+  col+=vec3(0.2,0.4,0.98)*clamp(grid,0.,1.1);
   uv.y+=R.x>R.y?.5:.5*(R.y/R.x);
   col+=scene(uv);
-  O=vec4(col,1.);
+  float vig=smoothstep(1.25,.2,length(p));
+  col=mix(vec3(0.012,0.015,0.035),col,.42+.58*vig);
+  O=vec4(clamp(col,0.,1.),1.);
 }`;
 
 const vertexSource = `#version 300 es
@@ -113,7 +122,7 @@ export default function AetherHero() {
     const draw = (now: number) => {
       gl.useProgram(program);
       gl.uniform2f(resolution, canvas.width, canvas.height);
-      gl.uniform1f(time, reducedMotion.matches ? 0 : now * 0.001);
+      gl.uniform1f(time, reducedMotion.matches ? 0 : now * 0.00055);
       gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
       if (!reducedMotion.matches) frame = requestAnimationFrame(draw);
     };

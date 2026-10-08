@@ -13,8 +13,8 @@ export function LiquidMetalSurface() {
       if (entry?.isIntersecting && !mount) {
         try {
           mount = new ShaderMount(element, liquidMetalFragmentShader, {
-            u_repetition: 4, u_softness: 0.5, u_shiftRed: 0.3,
-            u_shiftBlue: 0.3, u_distortion: 0, u_contour: 0,
+            u_repetition: 4, u_softness: 0.5, u_shiftRed: -0.15,
+            u_shiftBlue: 0.55, u_distortion: 0, u_contour: 0,
             u_angle: 45, u_scale: 8, u_shape: 1,
             u_offsetX: 0.1, u_offsetY: -0.1,
           }, undefined, reducedMotion.matches ? 0 : 0.6);

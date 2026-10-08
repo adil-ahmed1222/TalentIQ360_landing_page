@@ -2,7 +2,7 @@ import { createFileRoute, Link } from '@tanstack/react-router';
 import { lazy, Suspense, useState, type FormEvent } from 'react';
 import { ArrowRight, ArrowUpRight, Check, ChevronDown, CircleDot, Github, Layers3, Menu, Sparkles, X, Activity, BrainCircuit, ChartNoAxesCombined, UsersRound, Target, HeartPulse, Gauge, TrendingUp, LayoutDashboard, Lightbulb, CalendarDays, Mail } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import logo from '@/assets/talentiq360-symbol.png.asset.json';
+import { BrandMark } from '@/components/brand-mark';
 import { supabase } from '@/integrations/supabase/client';
 import { PremiumEffects, HeroStats, HeroAtmosphere } from '@/components/premium-effects';
 import { Preloader } from '@/components/preloader';
@@ -40,7 +40,7 @@ export const Route = createFileRoute('/')({
   component: Index,
 });
 
-function Brand({ compact=false }: { compact?:boolean }) { return <a href="#top" className="inline-flex items-center gap-2.5 shrink-0" aria-label="TalentIQ360 home"><img src={logo.url} alt="" className="h-10 w-11 object-contain object-center"/><span className={`font-display font-extrabold  ${compact?'text-lg':'text-xl'}`}>Talent<span className="text-primary">IQ</span>360</span></a>; }
+function Brand({ compact=false }: { compact?:boolean }) { return <a href="#top" className="brand-lockup" aria-label="TalentIQ360 home"><BrandMark /><span className={`font-display font-extrabold leading-none ${compact?'text-lg':'text-xl'}`}>Talent<span className="text-primary">IQ</span>360</span></a>; }
 function SectionHeading({ label,title,description,center=false }: {label:string;title:string;description?:string;center?:boolean}) { return <div className={`${center?'text-center mx-auto':'text-left'} max-w-2xl`}><p className="eyebrow mb-4">{label}</p><h2 className="font-display text-3xl md:text-5xl font-bold leading-tight text-balance">{title}</h2>{description && <p className="text-muted-foreground mt-5 text-base md:text-lg leading-relaxed">{description}</p>}</div>; }
 function ContactForm({ reason='demo' }: { reason?:string }) {
   const [state,setState] = useState<'idle'|'sending'|'sent'|'error'>('idle');

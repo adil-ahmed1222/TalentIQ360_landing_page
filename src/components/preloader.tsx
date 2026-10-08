@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { AnimatePresence, motion } from 'motion/react';
-import logo from '@/assets/talentiq360-symbol.png.asset.json';
+import { BrandMark } from '@/components/brand-mark';
 
 const MESSAGES = [
   'Initializing Talent Brain™',
@@ -104,7 +104,7 @@ export function Preloader() {
             <motion.div className="preloader-logo"
               initial={{ opacity: 0, scale: 0.6 }} animate={{ opacity: 1, scale: [0.6, 1.06, 1] }} transition={{ duration: 0.9, ease: 'easeOut' }}>
               <span className="preloader-pulse" />
-              <img src={logo.url} alt="" width={72} height={72} />
+              <BrandMark loader />
             </motion.div>
           </motion.div>
 
