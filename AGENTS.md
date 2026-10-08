@@ -1,17 +1,7 @@
-<!-- LOVABLE:BEGIN -->
-> [!IMPORTANT]
-> This project is connected to [Lovable](https://lovable.dev). Avoid rewriting
-> published git history — force pushing, or rebasing/amending/squashing commits
-> that are already pushed — as it rewrites history on Lovable's side and the
-> user will likely lose their project history.
->
-> Commits you push to the connected branch sync back to Lovable and show up in
-> the editor, so keep the branch in a working state.
-<!-- LOVABLE:END -->
+# TalentIQ360
 
-- Keep the TalentIQ360 marketing experience on the root route with anchored sections; this makes the public homepage the primary conversion entry point.
-- Keep checkout server-verified and do not simulate successful payments; payment status must come from Razorpay verification.
-- Store public contact requests in Cloud with insert-only visitor access; this allows a real inquiry flow without exposing submissions.
-- Offer email/password and managed Google sign-in on the public auth page; these methods work with Cloud's configured providers.
-- Use the uploaded AetherHero fragment shader as the full-bleed homepage hero background, keeping the existing TalentIQ360 content above it; the supplied shader is the requested visual source.
-- Render existing primary and glass action controls through the shared Button component with a client-mounted liquid-metal shader surface; this preserves navigation, form semantics, and one consistent visual treatment.
+- Keep the marketing experience on the root route, with sections reached by in-page anchors.
+- Do not simulate a successful payment. Payment status has to come from the payment provider.
+- Store public contact requests in Supabase. Visitors may insert a request; they must not be able to read other submissions.
+- The public auth page supports email and password, plus Google sign-in through Supabase Auth.
+- Keep the TalentIQ360 mark, type, and section structure unless a change is required for a specific fix.

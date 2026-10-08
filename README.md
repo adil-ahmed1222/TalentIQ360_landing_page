@@ -1,26 +1,30 @@
-# Your Sweet Spot
+# TalentIQ360
 
-add this logo also
-
-This project was built with [Lovable](https://lovable.dev).
-
-**Live app**: https://cuddle-canvas-app.lovable.app
-
-## Build with Lovable
-
-Continue developing this project in the [Lovable editor](https://lovable.dev/projects/bc555dcd-7b7f-4d99-8911-0cac4bf92ec8).
-
-- **Ship faster**: describe what you want to build and Lovable handles the code.
-- **Stay in sync**: every change made in Lovable is committed straight to this repository.
-- **Full ownership**: this code is yours. Push to `main` on GitHub and your changes sync back into Lovable, ready for your next prompt.
+Marketing site for TalentIQ360, an AI-powered workforce intelligence product.
 
 ## Development
 
-Prefer working locally? You need Node.js and npm — [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating).
+Requires Node.js and npm.
 
 ```sh
-git clone <this-repository-url>
-cd <repository-name>
-npm i
+npm install
 npm run dev
 ```
+
+The app runs at http://localhost:8080.
+
+Create a local `.env` with your Supabase project URL and keys. Do not commit that file.
+
+```
+SUPABASE_URL=
+SUPABASE_PUBLISHABLE_KEY=
+SUPABASE_SERVICE_ROLE_KEY=
+VITE_SUPABASE_URL=
+VITE_SUPABASE_PUBLISHABLE_KEY=
+```
+
+## Scripts
+
+- `npm run dev` starts the local site
+- `npm run build` creates a production build
+- `npm run preview` serves the production build

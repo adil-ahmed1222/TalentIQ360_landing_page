@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
 
-// The fragment shader supplied for the AetherHero background.
+// Full-bleed hero field. Colors follow the TalentIQ360 mark: navy, electric blue, and purple.
 const fragmentSource = `#version 300 es
 precision highp float;
 out vec4 O;
@@ -66,7 +66,7 @@ function compile(gl: WebGL2RenderingContext, type: number, source: string) {
   return shader;
 }
 
-export default function AetherHero() {
+export default function HeroField() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
@@ -139,5 +139,5 @@ export default function AetherHero() {
     };
   }, []);
 
-  return <canvas ref={canvasRef} className="aether-canvas" aria-hidden="true" />;
+  return <canvas ref={canvasRef} className="hero-field" aria-hidden="true" />;
 }
