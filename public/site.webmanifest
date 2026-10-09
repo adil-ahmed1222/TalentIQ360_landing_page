@@ -1,7 +1,7 @@
 {
   "name": "TalentIQ360",
   "short_name": "TalentIQ360",
-  "description": "AI-powered workforce intelligence",
+  "description": "AI-powered workforce intelligence for talent and performance decisions.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#070b16",

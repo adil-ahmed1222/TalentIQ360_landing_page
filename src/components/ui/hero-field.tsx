@@ -20,11 +20,11 @@ float pattern(vec2 uv) {
   return d;
 }
 vec3 scene(vec2 uv) {
-  vec3 col=vec3(0.012,0.016,0.04);
+  vec3 col=vec3(0.01,0.02,0.07);
   uv=vec2(atan(uv.x,uv.y)*2./6.28318,-log(length(uv))+T);
-  vec3 deep=vec3(0.0,0.1,0.52);
-  vec3 electric=vec3(0.08,0.26,0.96);
-  vec3 purple=vec3(0.42,0.2,0.94);
+  vec3 deep=vec3(0.02,0.18,0.85);
+  vec3 electric=vec3(0.12,0.42,1.0);
+  vec3 purple=vec3(0.48,0.12,0.98);
   for (float i=.0; i<3.; i++) {
     float p=pattern(uv+i*6./MN);
     vec3 tint=mix(deep,electric,step(1.,i));
@@ -36,14 +36,14 @@ vec3 scene(vec2 uv) {
 void main() {
   vec2 uv=(FC-.5*R)/MN;
   vec2 p=uv;
-  vec3 col=vec3(0.015,0.02,0.045);
+  vec3 col=vec3(0.012,0.02,0.06);
   float s=12., e=9e-4;
   float grid=e/(sin(uv.x*s)*cos(uv.y*s));
-  col+=vec3(0.2,0.4,0.98)*clamp(grid,0.,1.1);
+  col+=vec3(0.18,0.42,1.0)*clamp(grid,0.,1.1);
   uv.y+=R.x>R.y?.5:.5*(R.y/R.x);
   col+=scene(uv);
   float vig=smoothstep(1.25,.2,length(p));
-  col=mix(vec3(0.012,0.015,0.035),col,.42+.58*vig);
+  col=mix(vec3(0.01,0.015,0.05),col,.42+.58*vig);
   O=vec4(clamp(col,0.,1.),1.);
 }`;
 
@@ -137,7 +137,7 @@ export default function HeroField() {
       gl.deleteBuffer(buffer);
       gl.deleteProgram(program);
     };
-  }, []);
+  }, [fragmentSource]);
 
   return <canvas ref={canvasRef} className="hero-field" aria-hidden="true" />;
 }

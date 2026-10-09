@@ -3,22 +3,12 @@ import { AnimatePresence, motion } from 'motion/react';
 import { BrandMark } from '@/components/brand-mark';
 
 const MESSAGES = [
-  'Initializing Talent Brain™',
-  'Analyzing Workforce Intelligence',
-  'Connecting Enterprise Data',
-  'Syncing GitHub',
-  'Syncing Jira',
-  'Syncing ClickUp',
-  'Preparing AI Insights',
-  'Generating Executive Dashboard',
-  'System Ready',
+  'Preparing TalentIQ360',
+  'Loading the workforce view',
+  'Checking your session',
+  'Opening the site',
 ];
-const METRICS = [
-  { v: 50000, s: '+', l: 'Employees Analyzed' },
-  { v: 1, s: 'M+', l: 'Tasks Processed' },
-  { v: 99.9, s: '%', l: 'Platform Reliability' },
-  { v: 250, s: 'M+', l: 'Workforce Events' },
-];
+const STEPS = ['Connect', 'Review', 'Decide', 'Plan'];
 const DURATION = 2600;
 const KEY = 'tiq360-booted';
 
@@ -31,11 +21,6 @@ const PARTICLES = Array.from({ length: 22 }, (_, i) => {
   const a = (i / 22) * Math.PI * 2 + (i % 3);
   return { x: Math.cos(a) * 160, y: Math.sin(a) * 160, d: (i % 6) * 0.18 };
 });
-
-function fmt(v: number, target: number) {
-  if (target === 99.9) return v.toFixed(1);
-  return Math.round(v).toLocaleString('en-US');
-}
 
 export function Preloader() {
   const [show, setShow] = useState(true);
@@ -118,10 +103,10 @@ export function Preloader() {
           </div>
 
           <div className="preloader-metrics">
-            {METRICS.map((m) => (
-              <div key={m.l}>
-                <strong>{fmt(m.v * p, m.v)}{m.s}</strong>
-                <span>{m.l}</span>
+            {STEPS.map((label) => (
+              <div key={label}>
+                <strong>{label}</strong>
+                <span>Decision support</span>
               </div>
             ))}
           </div>

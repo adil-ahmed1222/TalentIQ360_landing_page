@@ -71,13 +71,54 @@ main .glass-panel:hover { box-shadow: 0 30px 70px -30px color-mix(in oklch, var(
 .liquid-metal-label { position:relative; z-index:1; display:inline-flex; align-items:center; justify-content:center; gap:.5rem; white-space:nowrap; }
 .liquid-metal:focus-visible { outline:2px solid var(--highlight); outline-offset:3px; }
 
-header { transition: background .35s ease, box-shadow .35s ease, border-color .35s ease; box-shadow: inset 0 -1px 0 color-mix(in oklch, var(--primary) 28%, transparent); }
-header.nav-scrolled { background: color-mix(in oklch, var(--background) 62%, transparent) !important; box-shadow: 0 12px 40px -20px color-mix(in oklch, var(--primary) 50%, transparent); }
+header { transition: background .35s ease, box-shadow .35s ease, border-color .35s ease; background: color-mix(in oklch, var(--background) 78%, transparent); backdrop-filter: blur(16px); box-shadow: inset 0 -1px 0 color-mix(in oklch, var(--border) 70%, transparent); }
+header.nav-scrolled { background: color-mix(in oklch, var(--background) 72%, transparent) !important; box-shadow: 0 12px 40px -24px color-mix(in oklch, var(--background) 80%, transparent); }
 @media (min-width: 768px) { header.nav-scrolled { inset-inline: 1rem; top: .6rem; border: 1px solid var(--border); border-radius: 1rem; } }
-header nav a { position:relative; }
-header nav a::after { content:""; position:absolute; left:0; right:0; bottom:-6px; height:2px; border-radius:2px; background: linear-gradient(90deg, var(--primary), var(--highlight)); transform: scaleX(0); transition: transform .3s ease; }
-header nav a:hover::after, header nav a.nav-active::after { transform: scaleX(1); }
-header nav a.nav-active { color: var(--foreground); }
+header .nav-toggle { border-radius: .7rem; background: transparent; transition: background .25s ease, color .25s ease; }
+header .nav-toggle:hover { background: color-mix(in oklch, var(--foreground) 6%, transparent); }
+header nav[aria-label="Main navigation"] { gap: .15rem; }
+header nav[aria-label="Mobile navigation"] { animation: nav-panel-in .24s ease; }
+@keyframes nav-panel-in { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: none; } }
+header nav a.nav-glass {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 34px;
+  padding: .4rem .7rem;
+  border-radius: .55rem;
+  font-family: var(--font-display);
+  font-size: 14.5px;
+  font-weight: 600;
+  letter-spacing: .01em;
+  line-height: 1;
+  white-space: nowrap;
+  color: var(--muted-foreground);
+  background: transparent;
+  transition: color .25s ease, background .25s ease;
+}
+header nav a.nav-glass::after {
+  content: "";
+  position: absolute;
+  left: .7rem;
+  right: .7rem;
+  bottom: .28rem;
+  height: 1.5px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, var(--primary), var(--violet));
+  transform: scaleX(0);
+  transform-origin: center;
+  transition: transform .25s ease;
+}
+header nav a.nav-glass:hover { color: var(--foreground); background: color-mix(in oklch, var(--foreground) 6%, transparent); }
+header nav a.nav-glass.nav-active {
+  color: var(--foreground);
+  background: linear-gradient(180deg, color-mix(in oklch, var(--primary) 16%, transparent), color-mix(in oklch, var(--violet) 10%, transparent));
+}
+header nav a.nav-glass.nav-active::after { transform: scaleX(1); }
+header nav a.nav-glass:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
+header nav[aria-label="Mobile navigation"] a.nav-glass { width: 100%; min-height: 44px; justify-content: flex-start; padding-inline: 1rem; font-size: 16px; }
+header nav[aria-label="Mobile navigation"] a.nav-glass::after { left: 1rem; right: auto; width: 1.4rem; }
 
 .reveal { opacity:0; translate: 0 24px; filter: blur(6px); transition: opacity .8s ease var(--d,0ms), translate .8s cubic-bezier(.2,.8,.2,1) var(--d,0ms), filter .8s ease var(--d,0ms); }
 .reveal.in { opacity:1; translate:0 0; filter:none; }
@@ -102,7 +143,7 @@ header nav a.nav-active { color: var(--foreground); }
 @keyframes bar { 50% { transform: scaleY(.6); } }
 .mini-bars i { transform-origin: bottom; }
 @media (max-width: 767px) { body::before { animation:none; inset:-4%; } .orb { filter: blur(48px); } }
-@media (prefers-reduced-motion: reduce) { .reveal { opacity:1; translate:none; filter:none; } .particle, .orb { display:none; } body::before { animation:none; } .liquid-metal:hover, .liquid-metal:active { transform:none; } }
+@media (prefers-reduced-motion: reduce) { .reveal { opacity:1; translate:none; filter:none; } .particle, .orb { display:none; } body::before { animation:none; } .liquid-metal:hover, .liquid-metal:active { transform:none; } header nav[aria-label="Mobile navigation"] { animation: none; } header nav a.nav-glass, header nav a.nav-glass::after { transition: none; } }
 
 /* Brand mark — same cropped symbol in the nav lockup and the preloader */
 .brand-lockup { display: inline-flex; align-items: center; gap: .7rem; flex-shrink: 0; line-height: 1; }

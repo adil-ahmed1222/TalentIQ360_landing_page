@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect } from 'react';
 
 /** Global micro-interactions: card tilt/spotlight, magnetic + ripple buttons, scroll navbar, scroll reveals. */
 export function PremiumEffects() {
@@ -52,41 +52,11 @@ export function PremiumEffects() {
   return null;
 }
 
-function Counter({ to, decimals = 0, suffix }: { to: number; decimals?: number; suffix: string }) {
-  const ref = useRef<HTMLSpanElement>(null);
-  const [v, setV] = useState(0);
-  useEffect(() => {
-    const el = ref.current; if (!el) return;
-    const io = new IntersectionObserver(([en]) => {
-      if (!en?.isIntersecting) return; io.disconnect();
-      const start = performance.now(), dur = 1600;
-      const tick = (n: number) => { const p = Math.min(1, (n - start) / dur); setV(to * (1 - Math.pow(1 - p, 3))); if (p < 1) requestAnimationFrame(tick); };
-      requestAnimationFrame(tick);
-    });
-    io.observe(el); return () => io.disconnect();
-  }, [to]);
-  return <span ref={ref}>{v.toLocaleString('en-US', { minimumFractionDigits: decimals, maximumFractionDigits: decimals })}{suffix}</span>;
-}
-
-export function HeroStats() {
-  const stats = [
-    { to: 50000, suffix: '+', label: 'Employees Analyzed' },
-    { to: 1, suffix: 'M+', label: 'Tasks Processed' },
-    { to: 99.9, decimals: 1, suffix: '%', label: 'Platform Reliability' },
-  ];
-  return <div className="hero-stats grid grid-cols-3 gap-2 sm:gap-3 mt-10 max-w-xl">
-    {stats.map((s) => <div key={s.label} className="glass-panel rounded-xl px-3 py-3 sm:px-4">
-      <div className="font-display text-lg sm:text-2xl font-bold stat-gradient"><Counter {...s} /></div>
-      <div className="text-[10px] sm:text-xs text-muted-foreground mt-1">{s.label}</div>
-    </div>)}
-  </div>;
-}
-
 export function HeroAtmosphere() {
   return <div className="absolute inset-0 pointer-events-none overflow-hidden" aria-hidden="true">
     <span className="orb orb-a" /><span className="orb orb-b" /><span className="orb orb-c" />
     {Array.from({ length: 18 }, (_, i) => <span key={i} className="particle" style={{ left: `${(i * 53) % 100}%`, animationDelay: `${(i * 0.7) % 9}s`, animationDuration: `${9 + (i % 5) * 2}s` }} />)}
-    <div className="hero-widget hidden lg:block right-[6%] top-[26%]"><span className="live-dot" /> Talent Brain live<div className="mini-bars"><i /><i /><i /><i /><i /><i /></div></div>
-    <div className="hero-widget hidden lg:block right-[14%] bottom-[18%] [animation-delay:1.5s]">Team health <strong className="text-highlight ml-1">+12.4%</strong></div>
+    <div className="hero-widget hidden lg:block right-[6%] top-[26%]"><span className="live-dot" /> Sample view<div className="mini-bars"><i /><i /><i /><i /><i /><i /></div></div>
+    <div className="hero-widget hidden lg:block right-[14%] bottom-[18%] [animation-delay:1.5s]">Illustration only</div>
   </div>;
 }
