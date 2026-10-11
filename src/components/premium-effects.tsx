@@ -56,7 +56,5 @@ export function HeroAtmosphere() {
   return <div className="absolute inset-0 pointer-events-none overflow-hidden" aria-hidden="true">
     <span className="orb orb-a" /><span className="orb orb-b" /><span className="orb orb-c" />
     {Array.from({ length: 18 }, (_, i) => <span key={i} className="particle" style={{ left: `${(i * 53) % 100}%`, animationDelay: `${(i * 0.7) % 9}s`, animationDuration: `${9 + (i % 5) * 2}s` }} />)}
-    <div className="hero-widget hidden lg:block right-[6%] top-[26%]"><span className="live-dot" /> Sample view<div className="mini-bars"><i /><i /><i /><i /><i /><i /></div></div>
-    <div className="hero-widget hidden lg:block right-[14%] bottom-[18%] [animation-delay:1.5s]">Illustration only</div>
   </div>;
 }

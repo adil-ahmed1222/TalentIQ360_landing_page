@@ -80,6 +80,39 @@ export type Database = {
         }
         Relationships: []
       }
+      ziina_payments: {
+        Row: {
+          amount_fils: number
+          created_at: string
+          currency_code: string
+          id: string
+          payment_intent_id: string
+          plan_id: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          amount_fils: number
+          created_at?: string
+          currency_code?: string
+          id?: string
+          payment_intent_id: string
+          plan_id: string
+          status: string
+          updated_at?: string
+        }
+        Update: {
+          amount_fils?: number
+          created_at?: string
+          currency_code?: string
+          id?: string
+          payment_intent_id?: string
+          plan_id?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

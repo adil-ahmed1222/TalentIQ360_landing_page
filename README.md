@@ -21,7 +21,11 @@ SUPABASE_PUBLISHABLE_KEY=
 SUPABASE_SERVICE_ROLE_KEY=
 VITE_SUPABASE_URL=
 VITE_SUPABASE_PUBLISHABLE_KEY=
+ZIINA_API_KEY=
+ZIINA_TEST_MODE=false
 ```
+
+`ZIINA_API_KEY` is the Ziina secret used only on the server. Do not prefix it with `VITE_` and do not commit it. Set `ZIINA_TEST_MODE=true` to create test payment links that do not charge a card.
 
 ## Scripts
 
