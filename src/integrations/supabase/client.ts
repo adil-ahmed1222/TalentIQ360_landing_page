@@ -1,6 +1,12 @@
 import { createClient } from '@supabase/supabase-js';
 import type { Database } from './types';
 
+declare global {
+  interface Window {
+    __TIQ_PUBLIC__?: { url?: string; key?: string };
+  }
+}
+
 function isNewSupabaseApiKey(value: string): boolean {
   return value.startsWith('sb_publishable_') || value.startsWith('sb_secret_');
 }
@@ -26,11 +32,17 @@ function createSupabaseFetch(supabaseKey: string): typeof fetch {
 }
 
 
+function browserPublicConfig() {
+  if (typeof window === 'undefined') return { url: '', key: '' };
+  return window.__TIQ_PUBLIC__ ?? { url: '', key: '' };
+}
+
 function createSupabaseClient() {
-  // Use import.meta.env for client-side (Vite build-time replacement)
-  // Fall back to process.env for SSR (server-side rendering)
-  const SUPABASE_URL = import.meta.env['VITE_SUPABASE_URL'] || process.env['SUPABASE_URL'];
-  const SUPABASE_PUBLISHABLE_KEY = import.meta.env['VITE_SUPABASE_PUBLISHABLE_KEY'] || process.env['SUPABASE_PUBLISHABLE_KEY'];
+  // Dot access is required so Vite can inline VITE_ variables into the browser bundle.
+  const env = typeof process === 'undefined' ? {} : process.env;
+  const browser = browserPublicConfig();
+  const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL || env.SUPABASE_URL || env.VITE_SUPABASE_URL || browser.url;
+  const SUPABASE_PUBLISHABLE_KEY = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY || env.SUPABASE_PUBLISHABLE_KEY || env.VITE_SUPABASE_PUBLISHABLE_KEY || browser.key;
 
   if (!SUPABASE_URL || !SUPABASE_PUBLISHABLE_KEY) {
     const missing = [

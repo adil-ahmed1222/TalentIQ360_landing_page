@@ -103,10 +103,22 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
   errorComponent: ErrorComponent,
 });
 
+function publicSupabaseScript() {
+  const env = typeof process === 'undefined' ? {} : process.env;
+  const fromEnv = {
+    url: env.VITE_SUPABASE_URL || env.SUPABASE_URL || '',
+    key: env.VITE_SUPABASE_PUBLISHABLE_KEY || env.SUPABASE_PUBLISHABLE_KEY || '',
+  };
+  const config = fromEnv.url && fromEnv.key ? fromEnv : (typeof window === 'undefined' ? fromEnv : window.__TIQ_PUBLIC__ ?? fromEnv);
+  const payload = JSON.stringify({ url: config.url ?? '', key: config.key ?? '' }).replaceAll('<', '\\u003c');
+  return `window.__TIQ_PUBLIC__=${payload}`;
+}
+
 function RootShell({ children }: { children: ReactNode }) {
   return (
     <html lang="en">
       <head>
+        <script dangerouslySetInnerHTML={{ __html: publicSupabaseScript() }} />
         <HeadContent />
       </head>
       <body>
