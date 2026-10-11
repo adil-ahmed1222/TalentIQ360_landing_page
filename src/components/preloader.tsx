@@ -30,6 +30,10 @@ export function Preloader() {
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (sessionStorage.getItem(KEY) || reduced) { setShow(false); return; }
     document.documentElement.style.overflow = 'hidden';
+    const failsafe = window.setTimeout(() => {
+      sessionStorage.setItem(KEY, '1');
+      setShow(false);
+    }, 3200);
     const start = performance.now();
     let raf = 0;
     const tick = (t: number) => {
@@ -39,7 +43,7 @@ export function Preloader() {
       else { sessionStorage.setItem(KEY, '1'); setTimeout(() => setShow(false), 250); }
     };
     raf = requestAnimationFrame(tick);
-    return () => { cancelAnimationFrame(raf); document.documentElement.style.overflow = ''; };
+    return () => { clearTimeout(failsafe); cancelAnimationFrame(raf); document.documentElement.style.overflow = ''; };
   }, []);
 
   useEffect(() => { if (!show) document.documentElement.style.overflow = ''; }, [show]);

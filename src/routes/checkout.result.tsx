@@ -62,13 +62,13 @@ function CheckoutResult() {
   }[state];
 
   return (
-    <main className="min-h-screen bg-background px-6 py-16">
-      <div className="mx-auto max-w-lg">
-        <Link to="/" className="brand-lockup font-display font-extrabold text-xl"><BrandMark />TalentIQ360</Link>
+    <main className="min-h-dvh bg-background px-4 py-12 sm:px-6 sm:py-16">
+      <div className="mx-auto max-w-lg min-w-0">
+        <Link to="/" className="brand-lockup font-display font-extrabold text-lg sm:text-xl"><BrandMark />TalentIQ360</Link>
         <p className="eyebrow mt-12">Ziina</p>
-        <h1 className="font-display text-4xl font-bold mt-4">{state === 'loading' ? 'Checking payment' : state === 'completed' ? 'Payment received' : 'Payment not completed'}</h1>
+        <h1 className="font-display text-3xl sm:text-4xl font-bold mt-4 text-balance">{state === 'loading' ? 'Checking payment' : state === 'completed' ? 'Payment received' : 'Payment not completed'}</h1>
         <p className="mt-4 text-muted-foreground leading-relaxed" role="status">{copy[0]} {copy[1]}</p>
-        <Link to="/" className="inline-flex mt-8 text-sm text-highlight">Back to TalentIQ360</Link>
+        <Link to="/" className="inline-flex min-h-11 items-center mt-8 text-sm text-highlight">Back to TalentIQ360</Link>
       </div>
     </main>
   );

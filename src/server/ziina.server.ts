@@ -17,6 +17,15 @@ function ziinaKey() {
   return key;
 }
 
+function privateHost(hostname: string) {
+  if (hostname === 'localhost' || hostname === '127.0.0.1' || hostname === '[::1]') return true;
+  const parts = hostname.split('.').map(Number);
+  if (parts.length !== 4 || parts.some((part) => !Number.isInteger(part) || part < 0 || part > 255)) return false;
+  if (parts[0] === 10 || parts[0] === 127) return true;
+  if (parts[0] === 192 && parts[1] === 168) return true;
+  return parts[0] === 172 && parts[1] >= 16 && parts[1] <= 31;
+}
+
 function allowedOrigin(value: string) {
   let url: URL;
   try {
@@ -24,7 +33,7 @@ function allowedOrigin(value: string) {
   } catch {
     return null;
   }
-  const local = url.protocol === 'http:' && (url.hostname === 'localhost' || url.hostname === '127.0.0.1');
+  const local = url.protocol === 'http:' && privateHost(url.hostname);
   const production = url.protocol === 'https:' && url.hostname === 'talent-iq-360-landing-page.vercel.app';
   if (!local && !production) return null;
   return url.origin;
@@ -33,6 +42,7 @@ function allowedOrigin(value: string) {
 async function ziinaFetch(path: string, init?: RequestInit) {
   const response = await fetch(path, {
     ...init,
+    signal: init?.signal ?? AbortSignal.timeout(20000),
     headers: {
       Authorization: `Bearer ${ziinaKey()}`,
       'Content-Type': 'application/json',

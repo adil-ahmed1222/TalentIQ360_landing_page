@@ -27,12 +27,13 @@
   --metal-face: oklch(.16 .04 268); --metal-edge: oklch(.72 .08 270);
 }
 * { border-color: var(--border); }
-html { scroll-behavior: smooth; background: var(--background); }
-body { margin: 0; background: transparent; color: var(--foreground); font-family: var(--font-sans); position: relative; z-index: 0; }
+html { scroll-behavior: smooth; background: var(--background); overflow-x: clip; }
+body { margin: 0; background: transparent; color: var(--foreground); font-family: var(--font-sans); position: relative; z-index: 0; overflow-x: clip; }
 body::before { content:""; position:fixed; inset:-10%; z-index:-1; pointer-events:none; background: radial-gradient(36% 30% at 6% 8%, color-mix(in oklch, var(--primary) 26%, transparent), transparent 68%), radial-gradient(30% 28% at 98% 4%, color-mix(in oklch, var(--violet) 20%, transparent), transparent 70%), radial-gradient(34% 32% at 78% 108%, color-mix(in oklch, var(--cyan) 12%, transparent), transparent 72%); animation: ambient-shift 28s ease-in-out infinite alternate; }
 @keyframes ambient-shift { to { transform: translate3d(2%, -1.5%, 0) scale(1.04); } }
 ::selection { background: var(--primary); color: var(--primary-foreground); }
-@utility section-wrap { width: min(100% - 3rem, 1200px); margin-inline: auto; }
+@utility section-wrap { width: min(100% - 2rem, 1200px); margin-inline: auto; }
+@media (min-width: 768px) { .section-wrap { width: min(100% - 3rem, 1200px); } }
 @utility eyebrow { text-transform: uppercase; letter-spacing: 0; font-size: .72rem; font-weight: 700; color: var(--highlight); }
 @utility glass-panel { background: color-mix(in oklch, var(--card) 70%, transparent); border: 1px solid var(--border); backdrop-filter: blur(18px); }
 @utility text-balance { text-wrap: balance; }
@@ -44,6 +45,7 @@ main > section.bg-surface { background-color: color-mix(in oklch, var(--surface)
 .section-divider { border-top: 1px solid var(--border); }
 .feature-tile { transition: transform .25s ease, border-color .25s ease, background .25s ease; }
 .feature-tile:hover { transform: translateY(-4px); border-color: var(--primary); background: var(--accent); }
+@media (hover: none) { .feature-tile:hover { transform: none; } }
 .brain-ring { border:1px solid color-mix(in oklch, var(--primary) 40%, transparent); border-radius:50%; animation: orbit 18s linear infinite; }
 .brain-ring:nth-child(2) { animation-direction:reverse; animation-duration:26s; }
 .brain-core { box-shadow: 0 0 70px color-mix(in oklch, var(--primary) 34%, transparent), inset 0 0 42px color-mix(in oklch, var(--primary) 22%, transparent); }
@@ -66,7 +68,12 @@ main .glass-panel:hover { box-shadow: 0 30px 70px -30px color-mix(in oklch, var(
 .liquid-metal:hover { transform:translateY(-2px); box-shadow: 0 4px 5px color-mix(in oklch, var(--background) 80%, transparent), 0 14px 22px -10px color-mix(in oklch, var(--metal-edge) 60%, transparent); }
 .liquid-metal:active { transform:translateY(1px) scale(.98); }
 .liquid-metal-surface { position:absolute; inset:0; pointer-events:none; border-radius:inherit; overflow:hidden; background:linear-gradient(125deg, var(--metal-edge), var(--muted), var(--foreground), var(--metal-edge)); }
-.liquid-metal-surface canvas { width:100% !important; height:100% !important; display:block !important; }
+.liquid-metal-surface canvas { width:100% !important; height:100% !important; display:block !important; pointer-events:none !important; }
+@media (hover: none), (max-width: 767px) {
+  .liquid-metal { touch-action: manipulation; }
+  .liquid-metal:hover, .liquid-metal:active { transform: none; }
+  .liquid-metal-label { white-space: normal; text-align: center; line-height: 1.25; }
+}
 .liquid-metal-face { position:absolute; inset:2px; pointer-events:none; border-radius:inherit; background:linear-gradient(180deg, color-mix(in oklch, var(--metal-face) 94%, transparent), var(--background)); box-shadow:inset 0 1px 2px color-mix(in oklch, var(--background) 70%, transparent); }
 .liquid-metal-label { position:relative; z-index:1; display:inline-flex; align-items:center; justify-content:center; gap:.5rem; white-space:nowrap; }
 .liquid-metal:focus-visible { outline:2px solid var(--highlight); outline-offset:3px; }
@@ -77,14 +84,15 @@ header.nav-scrolled { background: color-mix(in oklch, var(--background) 72%, tra
 header .nav-toggle { border-radius: .7rem; background: transparent; transition: background .25s ease, color .25s ease; }
 header .nav-toggle:hover { background: color-mix(in oklch, var(--foreground) 6%, transparent); }
 header nav[aria-label="Main navigation"] { gap: .15rem; }
-header nav[aria-label="Mobile navigation"] { animation: nav-panel-in .24s ease; }
+header nav[aria-label="Mobile navigation"] { animation: nav-panel-in .24s ease; max-height: calc(100dvh - 4.5rem); overflow-y: auto; overscroll-behavior: contain; }
+@media (max-width: 1279px) { header .nav-toggle { min-width: 44px; min-height: 44px; } }
 @keyframes nav-panel-in { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: none; } }
 header nav a.nav-glass {
   position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-height: 34px;
+  min-height: 44px;
   padding: .4rem .7rem;
   border-radius: .55rem;
   font-family: var(--font-display);
