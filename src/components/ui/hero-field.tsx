@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef } from "react";
 
 // Full-bleed hero field. Colors follow the TalentIQ360 mark: navy, electric blue, and purple.
 const fragmentSource = `#version 300 es
@@ -59,7 +59,7 @@ function compile(gl: WebGL2RenderingContext, type: number, source: string) {
   gl.shaderSource(shader, source);
   gl.compileShader(shader);
   if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
-    console.error('Aether shader:', gl.getShaderInfoLog(shader));
+    console.error("Aether shader:", gl.getShaderInfoLog(shader));
     gl.deleteShader(shader);
     return null;
   }
@@ -71,7 +71,11 @@ export default function HeroField() {
 
   useEffect(() => {
     const canvas = canvasRef.current;
-    const gl = canvas?.getContext('webgl2', { alpha: false, antialias: false, powerPreference: 'low-power' });
+    const gl = canvas?.getContext("webgl2", {
+      alpha: false,
+      antialias: false,
+      powerPreference: "low-power",
+    });
     if (!canvas || !gl) return;
 
     const vertex = compile(gl, gl.VERTEX_SHADER, vertexSource);
@@ -83,33 +87,41 @@ export default function HeroField() {
     }
 
     const program = gl.createProgram();
-    if (!program) { gl.deleteShader(vertex); gl.deleteShader(fragment); return; }
+    if (!program) {
+      gl.deleteShader(vertex);
+      gl.deleteShader(fragment);
+      return;
+    }
     gl.attachShader(program, vertex);
     gl.attachShader(program, fragment);
     gl.linkProgram(program);
     gl.deleteShader(vertex);
     gl.deleteShader(fragment);
     if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
-      console.error('Aether program:', gl.getProgramInfoLog(program));
+      console.error("Aether program:", gl.getProgramInfoLog(program));
       gl.deleteProgram(program);
       return;
     }
 
     const buffer = gl.createBuffer();
-    if (!buffer) { gl.deleteProgram(program); return; }
+    if (!buffer) {
+      gl.deleteProgram(program);
+      return;
+    }
     gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, 1, -1, -1, 1, 1, 1, -1]), gl.STATIC_DRAW);
     gl.useProgram(program);
-    const position = gl.getAttribLocation(program, 'position');
+    const position = gl.getAttribLocation(program, "position");
     gl.enableVertexAttribArray(position);
     gl.vertexAttribPointer(position, 2, gl.FLOAT, false, 0, 0);
-    const time = gl.getUniformLocation(program, 'time');
-    const resolution = gl.getUniformLocation(program, 'resolution');
-    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const time = gl.getUniformLocation(program, "time");
+    const resolution = gl.getUniformLocation(program, "resolution");
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
 
     const resize = () => {
       const { width, height } = canvas.getBoundingClientRect();
-      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      const dprCap = window.innerWidth < 768 ? 1 : 1.5;
+      const dpr = Math.min(window.devicePixelRatio || 1, dprCap);
       canvas.width = Math.max(1, Math.floor(width * dpr));
       canvas.height = Math.max(1, Math.floor(height * dpr));
       gl.viewport(0, 0, canvas.width, canvas.height);
@@ -117,22 +129,35 @@ export default function HeroField() {
     resize();
     const observer = new ResizeObserver(resize);
     observer.observe(canvas);
-
+    let visible = true;
     let frame = 0;
     const draw = (now: number) => {
+      if (!visible) return;
       gl.useProgram(program);
       gl.uniform2f(resolution, canvas.width, canvas.height);
       gl.uniform1f(time, reducedMotion.matches ? 0 : now * 0.00055);
       gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
-      if (!reducedMotion.matches) frame = requestAnimationFrame(draw);
+      if (!reducedMotion.matches && visible) frame = requestAnimationFrame(draw);
     };
+    const visibility = new IntersectionObserver((entries) => {
+      visible = entries.some((entry) => entry.isIntersecting);
+      if (visible && !reducedMotion.matches) {
+        cancelAnimationFrame(frame);
+        frame = requestAnimationFrame(draw);
+      }
+    });
+    visibility.observe(canvas);
     frame = requestAnimationFrame(draw);
-    const onMotionChange = () => { cancelAnimationFrame(frame); frame = requestAnimationFrame(draw); };
-    reducedMotion.addEventListener('change', onMotionChange);
+    const onMotionChange = () => {
+      cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(draw);
+    };
+    reducedMotion.addEventListener("change", onMotionChange);
 
     return () => {
       cancelAnimationFrame(frame);
-      reducedMotion.removeEventListener('change', onMotionChange);
+      reducedMotion.removeEventListener("change", onMotionChange);
+      visibility.disconnect();
       observer.disconnect();
       gl.deleteBuffer(buffer);
       gl.deleteProgram(program);

@@ -9,7 +9,7 @@ export function WorkforceOverview({ onConnect }: { onConnect: () => void }) {
   const showingDemo = status === "DEMO MODE" && showDemo;
 
   return (
-    <section className="section-divider py-24 md:py-32">
+    <section className="section-divider py-16 md:py-24 xl:py-32">
       <div className="mx-auto w-[min(100%-2rem,1440px)] md:w-[min(100%-3rem,1440px)]">
         <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
           <div className="max-w-2xl">

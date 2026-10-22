@@ -27,8 +27,9 @@
   --metal-face: oklch(.16 .04 268); --metal-edge: oklch(.72 .08 270);
 }
 * { border-color: var(--border); }
-html { scroll-behavior: smooth; background: var(--background); overflow-x: clip; }
+html { scroll-behavior: auto; scroll-padding-top: 5.5rem; background: var(--background); overflow-x: clip; }
 body { margin: 0; background: transparent; color: var(--foreground); font-family: var(--font-sans); position: relative; z-index: 0; overflow-x: clip; }
+main > section[id] { scroll-margin-top: 5.5rem; }
 body::before { content:""; position:fixed; inset:-10%; z-index:-1; pointer-events:none; background: radial-gradient(36% 30% at 6% 8%, color-mix(in oklch, var(--primary) 26%, transparent), transparent 68%), radial-gradient(30% 28% at 98% 4%, color-mix(in oklch, var(--violet) 20%, transparent), transparent 70%), radial-gradient(34% 32% at 78% 108%, color-mix(in oklch, var(--cyan) 12%, transparent), transparent 72%); animation: ambient-shift 28s ease-in-out infinite alternate; }
 @keyframes ambient-shift { to { transform: translate3d(2%, -1.5%, 0) scale(1.04); } }
 ::selection { background: var(--primary); color: var(--primary-foreground); }
@@ -78,9 +79,8 @@ main .glass-panel:hover { box-shadow: 0 30px 70px -30px color-mix(in oklch, var(
 .liquid-metal-label { position:relative; z-index:1; display:inline-flex; align-items:center; justify-content:center; gap:.5rem; white-space:nowrap; }
 .liquid-metal:focus-visible { outline:2px solid var(--highlight); outline-offset:3px; }
 
-header { transition: background .35s ease, box-shadow .35s ease, border-color .35s ease; background: color-mix(in oklch, var(--background) 78%, transparent); backdrop-filter: blur(16px); box-shadow: inset 0 -1px 0 color-mix(in oklch, var(--border) 70%, transparent); }
-header.nav-scrolled { background: color-mix(in oklch, var(--background) 72%, transparent) !important; box-shadow: 0 12px 40px -24px color-mix(in oklch, var(--background) 80%, transparent); }
-@media (min-width: 768px) { header.nav-scrolled { inset-inline: 1rem; top: .6rem; border: 1px solid var(--border); border-radius: 1rem; } }
+header { transition: background .35s ease, box-shadow .35s ease, border-color .35s ease; background: color-mix(in oklch, var(--background) 94%, transparent); backdrop-filter: blur(12px); box-shadow: inset 0 -1px 0 color-mix(in oklch, var(--border) 70%, transparent); }
+header.nav-scrolled { background: var(--background) !important; backdrop-filter: none; box-shadow: 0 10px 28px -22px color-mix(in oklch, var(--background) 90%, transparent); }
 header .nav-toggle { border-radius: .7rem; background: transparent; transition: background .25s ease, color .25s ease; }
 header .nav-toggle:hover { background: color-mix(in oklch, var(--foreground) 6%, transparent); }
 header nav[aria-label="Main navigation"] { gap: .15rem; }
@@ -128,11 +128,11 @@ header nav a.nav-glass:focus-visible { outline: 2px solid var(--primary); outlin
 header nav[aria-label="Mobile navigation"] a.nav-glass { width: 100%; min-height: 44px; justify-content: flex-start; padding-inline: 1rem; font-size: 16px; }
 header nav[aria-label="Mobile navigation"] a.nav-glass::after { left: 1rem; right: auto; width: 1.4rem; }
 
-.reveal { opacity:0; translate: 0 24px; filter: blur(6px); transition: opacity .8s ease var(--d,0ms), translate .8s cubic-bezier(.2,.8,.2,1) var(--d,0ms), filter .8s ease var(--d,0ms); }
-.reveal.in { opacity:1; translate:0 0; filter:none; }
-.hero-copy > * { animation: rise .9s cubic-bezier(.2,.8,.2,1) both; }
+.reveal { opacity:0; translate: 0 12px; transition: opacity .45s ease var(--d,0ms), translate .45s cubic-bezier(.2,.8,.2,1) var(--d,0ms); }
+.reveal.in { opacity:1; translate:0 0; }
+.hero-copy > * { animation: rise .7s cubic-bezier(.2,.8,.2,1) both; }
 .hero-copy > *:nth-child(2) { animation-delay:.08s } .hero-copy > *:nth-child(3) { animation-delay:.16s } .hero-copy > *:nth-child(4) { animation-delay:.24s } .hero-copy > *:nth-child(5) { animation-delay:.32s } .hero-copy > *:nth-child(6) { animation-delay:.4s }
-@keyframes rise { from { opacity:0; transform: translateY(28px); filter: blur(8px); } }
+@keyframes rise { from { opacity:0; transform: translateY(16px); } }
 .stat-gradient { background: linear-gradient(90deg, var(--foreground), var(--highlight)); -webkit-background-clip:text; background-clip:text; color:transparent; }
 
 .orb { position:absolute; border-radius:50%; filter: blur(70px); opacity:.45; mix-blend-mode: screen; animation: drift 18s ease-in-out infinite alternate; }
@@ -150,7 +150,17 @@ header nav[aria-label="Mobile navigation"] a.nav-glass::after { left: 1rem; righ
 .mini-bars i:nth-child(1){height:40%} .mini-bars i:nth-child(2){height:70%;animation-delay:.2s} .mini-bars i:nth-child(3){height:55%;animation-delay:.4s} .mini-bars i:nth-child(4){height:90%;animation-delay:.6s} .mini-bars i:nth-child(5){height:65%;animation-delay:.8s} .mini-bars i:nth-child(6){height:80%;animation-delay:1s}
 @keyframes bar { 50% { transform: scaleY(.6); } }
 .mini-bars i { transform-origin: bottom; }
-@media (max-width: 767px) { body::before { animation:none; inset:-4%; } .orb { filter: blur(48px); } }
+@media (max-width: 1023px) {
+  body::before { animation: none; inset: -4%; }
+  .particle { display: none; }
+  .orb { animation: none; filter: blur(28px); opacity: .16; }
+  .brain-ring, .float-slow, .mini-bars i, .live-dot { animation: none; }
+  .glass-panel, header { backdrop-filter: none; -webkit-backdrop-filter: none; }
+  header { background: var(--background); }
+  main .glass-panel:hover, .feature-tile:hover, .liquid-metal:hover, .liquid-metal:active { transform: none; }
+  main .glass-panel:hover::before, main .glass-panel:hover::after { opacity: 0; }
+  .reveal { opacity: 1; translate: none; transition: none; }
+}
 @media (prefers-reduced-motion: reduce) { .reveal { opacity:1; translate:none; filter:none; } .particle, .orb { display:none; } body::before { animation:none; } .liquid-metal:hover, .liquid-metal:active { transform:none; } header nav[aria-label="Mobile navigation"] { animation: none; } header nav a.nav-glass, header nav a.nav-glass::after { transition: none; } }
 
 /* Brand mark — same cropped symbol in the nav lockup and the preloader */

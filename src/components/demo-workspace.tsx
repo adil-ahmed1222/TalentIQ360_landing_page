@@ -317,17 +317,17 @@ export function DemoWorkspace({ onConnect }: { onConnect: () => void }) {
   );
 
   return (
-    <div className="relative mt-10 overflow-hidden rounded-2xl border border-white/10 bg-[#070b14] text-foreground shadow-2xl">
-      <div className="flex h-[min(920px,calc(100dvh-6rem))] min-h-[640px] min-w-0">
+    <div className="relative mt-6 min-w-0 max-w-full overflow-x-clip rounded-2xl border border-white/10 bg-[#070b14] text-foreground md:mt-10">
+      <div className="flex min-w-0 flex-col items-stretch md:flex-row md:items-start">
         <Sidebar
           view={view}
           collapsed={collapsed}
-          mobile={mobileNav}
+          sheet={false}
           onOpen={openView}
           onClose={() => setMobileNav(false)}
         />
         <div className="flex min-w-0 flex-1 flex-col">
-          <header className="flex min-h-14 items-center gap-2 border-b border-white/10 px-3 py-2">
+          <header className="sticky top-[4.75rem] z-20 flex min-h-14 min-w-0 items-center gap-2 border-b border-white/10 bg-[#070b14] px-2 py-2 sm:px-3">
             <button
               type="button"
               className="grid size-11 shrink-0 place-items-center rounded-lg hover:bg-white/5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary md:hidden"
@@ -409,7 +409,7 @@ export function DemoWorkspace({ onConnect }: { onConnect: () => void }) {
             >
               <Bell className="size-4" />
             </button>
-            <span className="hidden items-center gap-2 text-xs sm:inline-flex">
+            <span className="hidden shrink-0 items-center gap-2 text-xs lg:inline-flex">
               <span
                 className={cn(
                   "grid size-8 place-items-center rounded-full text-[11px] font-bold",
@@ -424,6 +424,15 @@ export function DemoWorkspace({ onConnect }: { onConnect: () => void }) {
               </span>
             </span>
           </header>
+          {mobileNav && (
+            <Sidebar
+              view={view}
+              collapsed={false}
+              sheet
+              onOpen={openView}
+              onClose={() => setMobileNav(false)}
+            />
+          )}
           {notices && (
             <div
               className="border-b border-white/10 bg-[#101522] px-4 py-3"
@@ -440,7 +449,7 @@ export function DemoWorkspace({ onConnect }: { onConnect: () => void }) {
               </p>
             </div>
           )}
-          <div className="flex gap-2 overflow-x-auto border-b border-white/10 px-3 py-2">
+          <div className="flex min-w-0 max-w-full gap-2 overflow-x-auto overscroll-x-contain border-b border-white/10 px-3 py-2">
             {CHIPS.map((chip) => (
               <button
                 key={chip.label}
@@ -458,12 +467,12 @@ export function DemoWorkspace({ onConnect }: { onConnect: () => void }) {
               </button>
             ))}
           </div>
-          <div className="flex min-h-0 flex-1">
+          <div className="flex min-h-0 min-w-0 flex-1 flex-col lg:flex-row">
             {view === "chat" && (
               <div
                 className={cn(
-                  "w-full shrink-0 flex-col border-white/10 bg-black/20 lg:flex lg:w-64 lg:border-r",
-                  historyOpen ? "flex" : "hidden",
+                  "min-w-0 w-full shrink-0 flex-col border-white/10 bg-black/20 lg:w-64 lg:border-r",
+                  historyOpen ? "flex" : "hidden lg:flex",
                 )}
               >
                 <div className="p-3">
@@ -485,7 +494,7 @@ export function DemoWorkspace({ onConnect }: { onConnect: () => void }) {
                     className={cn(fieldClass, "mt-3")}
                   />
                 </div>
-                <ul className="min-h-0 flex-1 overflow-y-auto px-2 pb-3">
+                <ul className="min-h-0 px-2 pb-3 lg:max-h-[calc(100dvh-16rem)] lg:overflow-y-auto">
                   {history.length === 0 && (
                     <li className="px-2 text-sm text-muted-foreground">No conversations match.</li>
                   )}
@@ -512,7 +521,7 @@ export function DemoWorkspace({ onConnect }: { onConnect: () => void }) {
             )}
             <div
               className={cn(
-                "min-w-0 flex-1 overflow-y-auto overscroll-contain p-3 sm:p-4",
+                "min-w-0 flex-1 p-3 sm:p-4",
                 view === "chat" && historyOpen && "hidden lg:block",
               )}
             >
@@ -550,20 +559,20 @@ export function DemoWorkspace({ onConnect }: { onConnect: () => void }) {
 function Sidebar({
   view,
   collapsed,
-  mobile,
+  sheet,
   onOpen,
   onClose,
 }: {
   view: DemoView;
   collapsed: boolean;
-  mobile: boolean;
+  sheet: boolean;
   onOpen: (view: DemoView) => void;
   onClose: () => void;
 }) {
   const body = (
-    <nav aria-label="Demonstration" className="flex h-full min-h-0 flex-col">
+    <nav aria-label="Demonstration" className="flex min-h-0 flex-col">
       <div className="flex items-center justify-between px-3 py-3">
-        <span className={cn("truncate text-sm font-bold", collapsed && !mobile && "md:sr-only")}>
+        <span className={cn("truncate text-sm font-bold", collapsed && "md:sr-only")}>
           Talent IQ
         </span>
         <button
@@ -575,13 +584,13 @@ function Sidebar({
           <X className="size-4" />
         </button>
       </div>
-      <div className="min-h-0 flex-1 space-y-4 overflow-y-auto px-2 pb-3">
+      <div className="space-y-4 px-2 pb-3">
         {NAV.map((group) => (
           <div key={group.label}>
             <p
               className={cn(
                 "px-2 pb-1 text-[10px] font-bold uppercase tracking-wide text-muted-foreground",
-                collapsed && !mobile && "md:sr-only",
+                collapsed && "md:sr-only",
               )}
             >
               {group.label}
@@ -605,19 +614,14 @@ function Sidebar({
                       )}
                     >
                       <Icon className="size-4 shrink-0" aria-hidden="true" />
-                      <span
-                        className={cn(
-                          "min-w-0 flex-1 truncate",
-                          collapsed && !mobile && "md:sr-only",
-                        )}
-                      >
+                      <span className={cn("min-w-0 flex-1 truncate", collapsed && "md:sr-only")}>
                         {item.label}
                       </span>
                       {item.hint && (
                         <span
                           className={cn(
                             "rounded-full border border-white/15 px-1.5 text-[10px]",
-                            collapsed && !mobile && "md:hidden",
+                            collapsed && "md:hidden",
                           )}
                         >
                           {item.hint}
@@ -634,29 +638,29 @@ function Sidebar({
       <p
         className={cn(
           "border-t border-white/10 px-3 py-3 text-[11px] text-muted-foreground",
-          collapsed && !mobile && "md:sr-only",
+          collapsed && "md:sr-only",
         )}
       >
         Demo data — not live
       </p>
     </nav>
   );
-  return (
-    <>
-      <aside
-        className={cn(
-          "hidden shrink-0 border-r border-white/10 bg-black/40 md:block",
-          collapsed ? "w-16" : "w-60",
-        )}
-      >
+  if (sheet) {
+    return (
+      <div className="max-h-[min(70dvh,32rem)] overflow-y-auto overscroll-contain border-b border-white/10 bg-[#070b14] md:hidden">
         {body}
-      </aside>
-      {mobile && (
-        <div className="absolute z-30 h-full w-72 max-w-[85%] border-r border-white/10 bg-[#070b14] md:hidden">
-          {body}
-        </div>
+      </div>
+    );
+  }
+  return (
+    <aside
+      className={cn(
+        "sticky top-[4.75rem] z-10 hidden max-h-[calc(100dvh-5.5rem)] shrink-0 flex-col self-start overflow-y-auto overscroll-y-auto border-r border-white/10 bg-[#070b14] md:flex",
+        collapsed ? "md:w-16" : "md:w-56 lg:w-60",
       )}
-    </>
+    >
+      {body}
+    </aside>
   );
 }
 
@@ -950,7 +954,11 @@ function TalentView({
           <button
             key={card.label}
             type="button"
-            onClick={() => document.getElementById(card.href)?.scrollIntoView({ block: "nearest" })}
+            onClick={() =>
+              document
+                .getElementById(card.href)
+                ?.scrollIntoView({ block: "start", behavior: "auto" })
+            }
             className="rounded-xl border border-white/10 bg-white/[0.03] p-4 text-left transition-colors hover:border-primary/50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
           >
             <span className="flex items-center justify-between gap-2 text-xs text-muted-foreground">
@@ -1151,7 +1159,7 @@ function DemoChart({ label, children }: { label: string; children: ReactElement 
   const [ready, setReady] = useState(false);
   useEffect(() => setReady(true), []);
   return (
-    <div className="h-56 min-w-0" role="img" aria-label={label}>
+    <div className="h-56 min-w-0 overflow-hidden" role="img" aria-label={label}>
       {ready ? (
         <ResponsiveContainer width="100%" height="100%">
           {children}
@@ -1177,7 +1185,10 @@ function Panel({
   children: ReactNode;
 }) {
   return (
-    <section id={id} className="min-w-0 rounded-xl border border-white/10 bg-white/[0.03] p-4">
+    <section
+      id={id}
+      className="min-w-0 scroll-mt-28 rounded-xl border border-white/10 bg-white/[0.03] p-4"
+    >
       <h3 className="font-display text-sm font-bold">{title}</h3>
       {detail && <p className="mt-1 text-xs text-muted-foreground">{detail}</p>}
       <div className="mt-4">{children}</div>
@@ -1245,7 +1256,7 @@ function PeopleView({ query, selectedId }: { query: string; selectedId: string |
           </article>
         ))}
       </div>
-      <div className="hidden overflow-x-auto lg:block">
+      <div className="hidden max-w-full overflow-x-auto lg:block">
         <table className="w-full min-w-[760px] text-left text-sm">
           <caption className="sr-only">Named demonstration employees</caption>
           <thead className="text-muted-foreground">
@@ -1516,7 +1527,7 @@ function PipelineView() {
       title="Hiring pipeline"
       text={`${talentDemo.candidates.length} candidates across ${talentDemo.stages.length} stages. Each column count is the number of cards in it.`}
     >
-      <div className="grid gap-3 lg:grid-cols-5">
+      <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-5">
         {talentDemo.stages.map((stage) => {
           const items = talentDemo.candidates.filter(
             (candidate) => candidate.stage === stage.stage,
@@ -1665,7 +1676,7 @@ function AdminView({ view }: { view: "organization" | "users" | "permissions" | 
 
 function Page({ title, text, children }: { title: string; text: string; children: ReactNode }) {
   return (
-    <div>
+    <div className="min-w-0">
       <p className="text-[11px] font-bold uppercase tracking-wide text-highlight">Demo Data</p>
       <h2 className="font-display text-2xl font-bold">{title}</h2>
       <p className="mt-2 max-w-3xl text-sm text-muted-foreground">{text}</p>
@@ -1676,9 +1687,9 @@ function Page({ title, text, children }: { title: string; text: string; children
 
 function Stat({ label, value }: { label: string; value: string }) {
   return (
-    <div>
+    <div className="min-w-0">
       <dt className="text-[11px] text-muted-foreground">{label}</dt>
-      <dd className="font-medium">{value}</dd>
+      <dd className="break-words font-medium">{value}</dd>
     </div>
   );
 }
