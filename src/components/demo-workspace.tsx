@@ -565,7 +565,7 @@ function Sidebar({
 }) {
   const body = (
     <nav aria-label="Demonstration" className="flex min-h-0 flex-col">
-      <div className="flex items-center gap-2 px-2.5 py-3">
+      <div className="relative flex items-center justify-center px-2.5 py-3">
         <img
           src="/images/talentiq-logo.png"
           alt="TalentIQ360"
@@ -576,7 +576,7 @@ function Sidebar({
         />
         <button
           type="button"
-          className="ml-auto grid size-11 place-items-center rounded-lg md:hidden"
+          className="absolute right-1 grid size-11 place-items-center rounded-lg md:hidden"
           aria-label="Close demonstration menu"
           onClick={onClose}
         >
@@ -586,16 +586,14 @@ function Sidebar({
       <div className="space-y-4 px-2 pb-3">
         {NAV.map((group) => (
           <div key={group.label}>
-            {group.label !== "Talent IQ" && (
-              <p
-                className={cn(
-                  "px-2 pb-1 text-[10px] font-bold uppercase tracking-wide text-muted-foreground",
-                  collapsed && "md:sr-only",
-                )}
-              >
-                {group.label}
-              </p>
-            )}
+            <p
+              className={cn(
+                "px-2 pb-1 text-[10px] font-bold uppercase tracking-wide text-muted-foreground",
+                collapsed && "md:sr-only",
+              )}
+            >
+              {group.label}
+            </p>
             <ul>
               {group.items.map((item) => {
                 const Icon = item.icon;
