@@ -13,13 +13,14 @@ import {
   Briefcase,
   Building2,
   CreditCard,
+  Clock,
   FolderKanban,
   GitCompare,
   Hash,
   Kanban,
   LayoutDashboard,
+  Bot,
   Linkedin,
-  MessageSquare,
   PanelLeftClose,
   PanelLeftOpen,
   Paperclip,
@@ -89,7 +90,7 @@ const NAV: {
   label: string;
   items: { id: DemoView; label: string; icon: typeof Users; hint?: string }[];
 }[] = [
-  { label: "Talent IQ", items: [{ id: "chat", label: "Chat", icon: MessageSquare }] },
+  { label: "Talent IQ", items: [{ id: "chat", label: "Chat", icon: Bot }] },
   {
     label: "Workforce",
     items: [
@@ -176,7 +177,7 @@ function matches(text: string, query: string) {
 }
 
 export function DemoWorkspace({ onConnect }: { onConnect: () => void }) {
-  const [view, setView] = useState<DemoView>("talent");
+  const [view, setView] = useState<DemoView>("chat");
   const [collapsed, setCollapsed] = useState(false);
   const [mobileNav, setMobileNav] = useState(false);
   const [query, setQuery] = useState("");
@@ -186,25 +187,12 @@ export function DemoWorkspace({ onConnect }: { onConnect: () => void }) {
   const [busy, setBusy] = useState(false);
   const [note, setNote] = useState("");
   const [historyQuery, setHistoryQuery] = useState("");
-  const [conversations, setConversations] = useState<Conversation[]>(() => [
-    {
-      id: "conv-snapshot",
-      title: "Workforce snapshot",
-      messages: [
-        { id: "seed-user", role: "user", text: "Summarize department performance." },
-        {
-          id: "seed-assistant",
-          role: "assistant",
-          text: answerDemoQuestion("Summarize department performance."),
-        },
-      ],
-    },
-  ]);
-  const [activeId, setActiveId] = useState("conv-snapshot");
+  const [conversations, setConversations] = useState<Conversation[]>([]);
+  const [activeId, setActiveId] = useState<string | null>(null);
   const [historyOpen, setHistoryOpen] = useState(false);
   const timer = useRef<number | null>(null);
   const searchId = useId();
-  const active = conversations.find((item) => item.id === activeId) ?? conversations[0];
+  const active = conversations.find((item) => item.id === activeId);
 
   useEffect(
     () => () => {
@@ -265,26 +253,32 @@ export function DemoWorkspace({ onConnect }: { onConnect: () => void }) {
 
   function send() {
     const text = draft.trim();
-    if (!text || busy || !active) {
+    if (!text || busy) {
       if (!text) setNote("Enter a question first.");
       return;
     }
-    const conversationId = active.id;
-    const userId = `user-${active.messages.length + 1}-${conversationId}`;
+    const conversationId = active?.id ?? `conv-${conversations.length + 1}`;
+    const userId = `user-${(active?.messages.length ?? 0) + 1}-${conversationId}`;
     setDraft("");
     setNote("");
     setBusy(true);
-    setConversations((list) =>
-      list.map((item) =>
+    setActiveId(conversationId);
+    setConversations((list) => {
+      const current = list.find((item) => item.id === conversationId);
+      const message = { id: userId, role: "user" as const, text };
+      if (!current) {
+        return [{ id: conversationId, title: text.slice(0, 48), messages: [message] }, ...list];
+      }
+      return list.map((item) =>
         item.id === conversationId
           ? {
               ...item,
               title: item.messages.length === 0 ? text.slice(0, 48) : item.title,
-              messages: [...item.messages, { id: userId, role: "user", text }],
+              messages: [...item.messages, message],
             }
           : item,
-      ),
-    );
+      );
+    });
     timer.current = window.setTimeout(() => {
       setConversations((list) =>
         list.map((item) =>
@@ -350,9 +344,12 @@ export function DemoWorkspace({ onConnect }: { onConnect: () => void }) {
                 <PanelLeftClose className="size-4" />
               )}
             </button>
-            <p className="hidden min-w-0 truncate text-sm text-muted-foreground lg:block">
-              <span className="text-foreground">Talent Intelligence</span> /{" "}
-              {NAV.flatMap((group) => group.items).find((item) => item.id === view)?.label}
+            <p className="hidden min-w-0 truncate text-sm text-muted-foreground md:block">
+              <span className="text-foreground">Talent Intelligence</span>
+              <span className="px-1.5">/</span>
+              {view === "chat"
+                ? "AI Workspace"
+                : NAV.flatMap((group) => group.items).find((item) => item.id === view)?.label}
             </p>
             <div className="relative ml-auto min-w-0 flex-1 md:max-w-xs">
               <label htmlFor={searchId} className="sr-only">
@@ -409,6 +406,18 @@ export function DemoWorkspace({ onConnect }: { onConnect: () => void }) {
             >
               <Bell className="size-4" />
             </button>
+            <button
+              type="button"
+              className="grid size-11 shrink-0 place-items-center rounded-lg hover:bg-white/5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+              aria-label="Open chat history"
+              aria-expanded={historyOpen}
+              onClick={() => {
+                setView("chat");
+                setHistoryOpen(true);
+              }}
+            >
+              <Clock className="size-4" />
+            </button>
             <span className="hidden shrink-0 items-center gap-2 text-xs lg:inline-flex">
               <span
                 className={cn(
@@ -449,22 +458,6 @@ export function DemoWorkspace({ onConnect }: { onConnect: () => void }) {
               </p>
             </div>
           )}
-          <div className="flex min-w-0 max-w-full gap-2 overflow-x-auto overscroll-x-contain border-b border-white/10 px-3 py-2">
-            {CHIPS.map((chip) => (
-              <button
-                key={chip.label}
-                type="button"
-                onClick={() => openView(chip.view)}
-                className={cn(
-                  "min-h-11 shrink-0 rounded-lg px-3 text-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary",
-                  view === chip.view ? "tiq-selected" : "text-muted-foreground hover:bg-white/5",
-                )}
-                aria-current={view === chip.view ? "page" : undefined}
-              >
-                {chip.label}
-              </button>
-            ))}
-          </div>
           <div className="flex min-h-0 min-w-0 flex-1 flex-col lg:flex-row">
             {view === "chat" && (
               <div
@@ -477,7 +470,7 @@ export function DemoWorkspace({ onConnect }: { onConnect: () => void }) {
                   <button
                     type="button"
                     onClick={newChat}
-                    className="tiq-action flex min-h-11 w-full items-center justify-center gap-2 rounded-lg text-sm font-semibold focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+                    className="flex min-h-11 w-full items-center justify-center gap-2 rounded-lg bg-white text-sm font-semibold text-black shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
                   >
                     <Plus className="size-4" /> New chat
                   </button>
@@ -493,7 +486,7 @@ export function DemoWorkspace({ onConnect }: { onConnect: () => void }) {
                   />
                 </div>
                 <ul className="min-h-0 px-2 pb-3 lg:max-h-[calc(100dvh-16rem)] lg:overflow-y-auto">
-                  {history.length === 0 && (
+                  {history.length === 0 && historyQuery.trim() && (
                     <li className="px-2 text-sm text-muted-foreground">No conversations match.</li>
                   )}
                   {history.map((item) => (
@@ -530,6 +523,9 @@ export function DemoWorkspace({ onConnect }: { onConnect: () => void }) {
                   draft={draft}
                   note={note}
                   historyOpen={historyOpen}
+                  view={view}
+                  onOpen={openView}
+                  onNewChat={newChat}
                   onToggleHistory={() => setHistoryOpen((value) => !value)}
                   onDraft={setDraft}
                   onNote={setNote}
@@ -614,11 +610,24 @@ function Sidebar({
                       title={item.label}
                       className={cn(
                         "flex min-h-11 w-full items-center gap-2 rounded-lg px-2 text-left text-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary",
-                        current ? "tiq-selected" : "text-foreground/80 hover:bg-white/5",
+                        item.id === "chat"
+                          ? cn("tiq-chat-glass", current && "is-current")
+                          : current
+                            ? "bg-[#14161d] text-white ring-1 ring-white/10"
+                            : "text-foreground/80 hover:bg-white/5",
                       )}
                     >
-                      <Icon className="size-4 shrink-0" aria-hidden="true" />
-                      <span className={cn("min-w-0 flex-1 truncate", collapsed && "md:sr-only")}>
+                      <Icon
+                        className={cn("size-4 shrink-0", item.id === "chat" && "size-[16px]")}
+                        aria-hidden="true"
+                      />
+                      <span
+                        className={cn(
+                          "min-w-0 truncate",
+                          item.id !== "chat" && "flex-1",
+                          collapsed && "md:sr-only",
+                        )}
+                      >
                         {item.label}
                       </span>
                       {item.hint && (
@@ -674,6 +683,9 @@ function ChatPane({
   draft,
   note,
   historyOpen,
+  view,
+  onOpen,
+  onNewChat,
   onToggleHistory,
   onDraft,
   onNote,
@@ -685,6 +697,9 @@ function ChatPane({
   draft: string;
   note: string;
   historyOpen: boolean;
+  view: DemoView;
+  onOpen: (view: DemoView) => void;
+  onNewChat: () => void;
   onToggleHistory: () => void;
   onDraft: (value: string) => void;
   onNote: (value: string) => void;
@@ -692,31 +707,63 @@ function ChatPane({
   onAsk: (prompt: string) => void;
 }) {
   const messages = active?.messages ?? [];
+  const quickActions = [
+    { label: "Find talent", icon: Search, prompt: DEMO_PROMPTS[0] ?? "" },
+    { label: "Compare", icon: GitCompare, prompt: DEMO_PROMPTS[2] ?? "" },
+    { label: "Staff project", icon: FolderKanban, prompt: DEMO_PROMPTS[4] ?? "" },
+    { label: "Insights", icon: Sparkles, prompt: DEMO_PROMPTS[6] ?? "" },
+  ];
   return (
-    <div className="mx-auto flex min-h-full w-full max-w-3xl flex-col">
-      <div className="mb-3 flex items-center justify-between gap-3">
-        <div>
+    <div className="mx-auto flex min-h-[32rem] w-full max-w-3xl flex-col">
+      <div className="mb-3 flex items-start justify-between gap-3">
+        <div className="min-w-0">
           <h2 className="font-display text-lg font-bold">AI Workspace</h2>
           <p className="text-xs text-muted-foreground">
-            Simulated answers from the demonstration dataset. Nothing here queries a live workforce.
+            Ask first. Answers use the demonstration dataset. GitHub, Jira, ClickUp, Excel, and
+            LinkedIn are not connected.
           </p>
         </div>
-        <button
-          type="button"
-          className="min-h-11 rounded-lg border border-white/10 px-3 text-sm lg:hidden"
-          aria-expanded={historyOpen}
-          onClick={onToggleHistory}
-        >
-          {historyOpen ? "Hide chats" : "Chats"}
-        </button>
+        <div className="flex shrink-0 gap-2 lg:hidden">
+          <button
+            type="button"
+            onClick={onNewChat}
+            className="inline-flex min-h-11 items-center gap-1 rounded-lg bg-white px-3 text-sm font-semibold text-black"
+          >
+            <Plus className="size-4" /> New chat
+          </button>
+          <button
+            type="button"
+            className="min-h-11 rounded-lg border border-white/10 px-3 text-sm"
+            aria-expanded={historyOpen}
+            onClick={onToggleHistory}
+          >
+            {historyOpen ? "Hide chats" : "Chats"}
+          </button>
+        </div>
       </div>
-      <div className="flex-1" aria-live="polite">
+      <div className="mb-4 flex min-w-0 max-w-full gap-2 overflow-x-auto overscroll-x-contain">
+        {CHIPS.map((chip) => (
+          <button
+            key={chip.label}
+            type="button"
+            onClick={() => onOpen(chip.view)}
+            className={cn(
+              "inline-flex min-h-11 shrink-0 items-center gap-1.5 rounded-lg px-3 text-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary",
+              view === chip.view ? "tiq-selected" : "text-muted-foreground hover:bg-white/5",
+            )}
+            aria-current={view === chip.view ? "page" : undefined}
+          >
+            {chip.label}
+          </button>
+        ))}
+      </div>
+      <div className="flex flex-1 flex-col" aria-live="polite">
         {messages.length === 0 ? (
-          <div className="grid min-h-72 place-items-center text-center">
+          <div className="grid flex-1 place-items-center px-4 py-10 text-center">
             <div>
-              <h3 className="font-display text-3xl font-bold">How can I help today?</h3>
+              <h3 className="font-display text-3xl font-bold sm:text-4xl">How can I help today?</h3>
               <p className="mt-2 text-sm text-muted-foreground">
-                Type a command or ask a question about the demonstration organization.
+                Type a command or ask a question.
               </p>
             </div>
           </div>
@@ -742,20 +789,8 @@ function ChatPane({
           </ul>
         )}
       </div>
-      <div className="mt-4 flex flex-wrap gap-2">
-        {DEMO_PROMPTS.slice(0, 4).map((prompt) => (
-          <button
-            key={prompt}
-            type="button"
-            onClick={() => onAsk(prompt)}
-            className="min-h-11 rounded-full border border-white/10 px-3 text-left text-xs hover:bg-white/5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary"
-          >
-            {prompt}
-          </button>
-        ))}
-      </div>
       <form
-        className="mt-3 rounded-2xl border border-white/10 bg-white/[0.03] p-3"
+        className="mt-3 rounded-2xl border border-white/10 bg-black/30 p-3"
         onSubmit={(event) => {
           event.preventDefault();
           onSend();
@@ -775,7 +810,7 @@ function ChatPane({
               onSend();
             }
           }}
-          placeholder="Ask TalentAI a question about the demonstration..."
+          placeholder="Ask TalentAI a question..."
           className="min-h-24 w-full resize-y bg-transparent text-base outline-none"
         />
         <div className="mt-2 flex items-center gap-2">
@@ -798,7 +833,7 @@ function ChatPane({
           <button
             type="submit"
             disabled={busy}
-            className="tiq-action ml-auto inline-flex min-h-11 items-center gap-2 rounded-lg px-4 text-sm font-semibold focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary disabled:opacity-60"
+            className="ml-auto inline-flex min-h-11 items-center gap-2 rounded-lg border border-white/10 px-4 text-sm font-semibold hover:bg-white/5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary disabled:opacity-60"
           >
             <Send className="size-4" /> {busy ? "Sending" : "Send"}
           </button>
@@ -815,27 +850,21 @@ function ChatPane({
           Answers stay inside this browser session and are marked simulated.
         </p>
       </form>
-      <div className="mt-3 flex flex-wrap gap-2">
-        {["Find talent", "Compare", "Staff project", "Insights"].map((label) => (
-          <button
-            key={label}
-            type="button"
-            className="min-h-11 rounded-full border border-white/10 px-3 text-sm hover:bg-white/5"
-            onClick={() =>
-              onAsk(
-                label === "Find talent"
-                  ? (DEMO_PROMPTS[0] ?? "")
-                  : label === "Compare"
-                    ? (DEMO_PROMPTS[2] ?? "")
-                    : label === "Staff project"
-                      ? (DEMO_PROMPTS[4] ?? "")
-                      : (DEMO_PROMPTS[6] ?? ""),
-              )
-            }
-          >
-            {label}
-          </button>
-        ))}
+      <div className="mt-4 flex flex-wrap justify-center gap-2">
+        {quickActions.map((action) => {
+          const Icon = action.icon;
+          return (
+            <button
+              key={action.label}
+              type="button"
+              className="inline-flex min-h-11 items-center gap-2 rounded-full border border-white/10 px-3 text-sm hover:bg-white/5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary"
+              onClick={() => onAsk(action.prompt)}
+            >
+              <Icon className="size-4" aria-hidden="true" />
+              {action.label}
+            </button>
+          );
+        })}
       </div>
     </div>
   );
@@ -963,7 +992,7 @@ function TalentView({
                 .getElementById(card.href)
                 ?.scrollIntoView({ block: "start", behavior: "auto" })
             }
-            className="tiq-card rounded-xl border p-4 text-left hover:border-[var(--brand-blue)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+            className="action-tile p-4 text-left focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
           >
             <span className="flex items-center justify-between gap-2 text-xs text-muted-foreground">
               {card.label}
@@ -1189,7 +1218,7 @@ function Panel({
   children: ReactNode;
 }) {
   return (
-    <section id={id} className="tiq-card min-w-0 scroll-mt-28 rounded-xl border p-4">
+    <section id={id} className="intelligence-panel min-w-0 scroll-mt-28 rounded-xl p-4">
       <h3 className="font-display text-sm font-bold">{title}</h3>
       {detail && <p className="mt-1 text-xs text-muted-foreground">{detail}</p>}
       <div className="mt-4">{children}</div>
@@ -1244,8 +1273,8 @@ function PeopleView({ query, selectedId }: { query: string; selectedId: string |
           <article
             key={person.id}
             className={cn(
-              "rounded-xl border border-white/10 p-4",
-              person.id === selectedId && "border-primary",
+              "intelligence-panel rounded-xl p-4",
+              person.id === selectedId && "outline outline-2 outline-primary",
             )}
           >
             <PersonLine person={person} />
@@ -1304,7 +1333,7 @@ function TeamsView() {
     >
       <ul className="grid gap-3 sm:grid-cols-2">
         {talentDemo.teams.map((team) => (
-          <li key={team.id} className="rounded-xl border border-white/10 p-4">
+          <li key={team.id} className="intelligence-panel rounded-xl p-4">
             <h3 className="font-semibold">{team.name}</h3>
             <p className="text-sm text-muted-foreground">{departmentName(team.departmentId)}</p>
             <p className="mt-2 font-display text-2xl font-bold">{team.headcount}</p>
@@ -1321,7 +1350,7 @@ function DepartmentsView() {
     <Page title="Departments" text="These six departments are the source of the dashboard totals.">
       <div className="grid gap-3 md:grid-cols-2">
         {talentDemo.departments.map((item) => (
-          <article key={item.id} className="rounded-xl border border-white/10 p-4">
+          <article key={item.id} className="intelligence-panel rounded-xl p-4">
             <h3 className="font-semibold">{item.name}</h3>
             <p className="mt-1 font-display text-2xl font-bold">
               {item.headcount}{" "}
@@ -1534,7 +1563,7 @@ function PipelineView() {
             (candidate) => candidate.stage === stage.stage,
           );
           return (
-            <section key={stage.stage} className="rounded-xl border border-white/10 p-3">
+            <section key={stage.stage} className="intelligence-panel rounded-xl p-3">
               <h3 className="text-sm font-bold">
                 {stage.stage} <span className="text-muted-foreground">{items.length}</span>
               </h3>
@@ -1729,7 +1758,7 @@ function PersonSelect({
 
 function CompareCard({ person }: { person: DemoPerson }) {
   return (
-    <div className="rounded-xl border border-white/10 p-4">
+    <div className="intelligence-panel rounded-xl p-4">
       <PersonLine person={person} />
       <dl className="mt-3 grid grid-cols-2 gap-2 text-sm">
         <Stat label="Skills" value={`${person.skillsCoverage}%`} />
@@ -1745,7 +1774,7 @@ function CandidateList({ items, empty }: { items: readonly DemoCandidate[]; empt
   return (
     <ul className="mt-2 space-y-2">
       {items.map((candidate) => (
-        <li key={candidate.id} className="rounded-xl border border-white/10 p-3 text-sm">
+        <li key={candidate.id} className="intelligence-panel rounded-xl p-3 text-sm">
           <span className="font-semibold">{candidate.name}</span>
           <span className="mt-1 block text-muted-foreground">
             {candidate.title} · {openingTitle(candidate.openingId)} · {candidate.stage} ·{" "}

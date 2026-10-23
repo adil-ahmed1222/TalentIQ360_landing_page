@@ -182,9 +182,73 @@ header nav[aria-label="Mobile navigation"] a.nav-glass::after { left: 1rem; righ
 .brand-mark { display: block; height: 2.75rem; width: calc(2.75rem * 617 / 719); aspect-ratio: 617 / 719; object-fit: contain; object-position: center; flex: 0 0 auto; background: transparent; }
 .brand-mark-loader { height: 72cqh; width: calc(72cqh * 617 / 719); animation: pl-glow 1.6s ease-in-out infinite; }
 .tiq-demo-section { background: linear-gradient(180deg, #020204 0%, #080412 18%, #0c071e 32%, #140a2f 50%, #1c0e43 68%, #21114f 82%, #28135e 100%); }
-.tiq-demo { color: var(--brand-text); border-color: color-mix(in srgb, #5a3d86 42%, transparent); background: transparent; }
+.tiq-demo {
+  --background: oklch(0.08 0.025 270);
+  --foreground: oklch(0.97 0.01 255);
+  --card: oklch(0.155 0.027 263);
+  --card-foreground: oklch(0.984 0.003 247.858);
+  --primary: oklch(0.72 0.14 265);
+  --primary-foreground: oklch(0.08 0.025 270);
+  --secondary: oklch(0.21 0.035 263);
+  --secondary-foreground: oklch(0.984 0.003 247.858);
+  --muted: oklch(0.19 0.027 263);
+  --muted-foreground: oklch(0.68 0.035 255);
+  --accent: oklch(0.25 0.07 265);
+  --accent-foreground: oklch(0.984 0.003 247.858);
+  --destructive: oklch(0.704 0.191 22.216);
+  --border: oklch(0.72 0.08 265 / 16%);
+  --input: oklch(0.72 0.08 265 / 20%);
+  --ring: oklch(0.72 0.14 265);
+  --radius: 0.5rem;
+  color: var(--foreground);
+  border-color: color-mix(in srgb, #5a3d86 42%, transparent);
+  background:
+    radial-gradient(90% 42% at 50% 108%, color-mix(in srgb, #6d28d9 46%, transparent), transparent 62%),
+    #07080d;
+}
 .tiq-surface { background-color: transparent; }
-.tiq-demo header.tiq-surface { background-color: #080412; }
+.tiq-demo header.tiq-surface { background-color: #07080d; }
+.tiq-chat-glass {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  min-height: 42px;
+  padding: 10px 16px;
+  border-radius: 9999px;
+  color: #f5f5ff;
+  font-weight: 500;
+  border: 1px solid transparent;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.05), transparent 42%) padding-box,
+    linear-gradient(180deg, #171927 0%, #090a12 100%) padding-box,
+    linear-gradient(120deg, rgba(96, 150, 255, 0.72), rgba(112, 86, 220, 0.28) 42%, rgba(150, 110, 255, 0.62)) border-box;
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 0.08),
+    -8px 10px 16px -12px rgba(70, 60, 200, 0.7),
+    0 8px 14px -12px rgba(80, 50, 190, 0.65);
+  transition: box-shadow 200ms ease, transform 150ms ease;
+}
+.tiq-chat-glass > * { position: relative; z-index: 1; }
+.tiq-chat-glass:hover {
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 0.1),
+    -10px 12px 18px -10px rgba(90, 70, 230, 0.8),
+    0 0 14px rgba(100, 80, 230, 0.28);
+}
+.tiq-chat-glass:active { transform: translateY(1px); }
+.tiq-chat-glass.is-current {
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 0.1),
+    -8px 10px 18px -10px rgba(90, 70, 230, 0.75),
+    0 0 12px rgba(90, 70, 220, 0.26);
+}
+@media (prefers-reduced-motion: reduce) {
+  .tiq-chat-glass, .tiq-chat-glass:active { transition: none; transform: none; }
+}
 .tiq-elevated { background-color: var(--brand-surface-elevated); }
 .tiq-card { background-color: var(--brand-surface); border-color: var(--brand-border); box-shadow: 0 16px 40px -32px color-mix(in srgb, var(--brand-blue) 75%, transparent); transition: border-color .2s ease, background-color .2s ease; }
 .tiq-card:hover { border-color: color-mix(in srgb, var(--brand-blue) 55%, var(--brand-border)); }
@@ -192,7 +256,7 @@ header nav[aria-label="Mobile navigation"] a.nav-glass::after { left: 1rem; righ
 .tiq-action { background-image: var(--brand-gradient); color: #fff; transition: filter .2s ease; }
 .tiq-action:hover { filter: brightness(1.08); }
 .tiq-meter { background-image: var(--brand-gradient); }
-.tiq-demo .text-muted-foreground { color: var(--brand-muted); }
+.tiq-demo .text-muted-foreground { color: var(--muted-foreground); }
 .tiq-demo .text-highlight { color: var(--brand-cyan); }
 .tiq-demo .border-white\/10, .tiq-demo .border-white\/15 { border-color: var(--brand-border); }
 @media (prefers-reduced-motion: reduce) { .tiq-action, .tiq-card { transition: none; } .tiq-action:hover { filter: none; } }
@@ -220,6 +284,102 @@ header nav[aria-label="Mobile navigation"] a.nav-glass::after { left: 1rem; righ
 @keyframes pl-wave { from { transform: scale(1); opacity: .8; } to { transform: scale(2.2); opacity: 0; } }
 @keyframes pl-in { 0% { transform: translate(var(--x), var(--y)); opacity: 0; } 30% { opacity: 1; } 100% { transform: translate(0, 0) scale(.3); opacity: 0; } }
 @keyframes pl-failsafe { to { opacity: 0; visibility: hidden; pointer-events: none; } }
+
+/* Demo theme — glass panels and the liquid-metal chat control */
+@utility intelligence-panel {
+  position: relative;
+  overflow: hidden;
+  background: color-mix(in oklab, var(--card) 58%, transparent);
+  border: 1px solid color-mix(in oklab, white 10%, transparent);
+  box-shadow: 0 16px 48px -28px color-mix(in oklab, var(--primary) 28%, transparent);
+  backdrop-filter: blur(22px);
+
+  &::before {
+    content: "";
+    pointer-events: none;
+    position: absolute;
+    inset-inline: 0;
+    top: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgb(255 255 255 / 38%), transparent);
+  }
+}
+
+@utility action-tile {
+  position: relative;
+  overflow: hidden;
+  border-radius: 16px;
+  border: 1px solid rgb(255 255 255 / 10%);
+  background: color-mix(in oklab, var(--card) 48%, transparent);
+  backdrop-filter: blur(18px);
+  transition: transform 200ms ease, box-shadow 200ms ease, border-color 200ms ease;
+
+  &::after {
+    content: "";
+    pointer-events: none;
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1px;
+    background: linear-gradient(120deg, transparent 10%, #3b82f6 50%, transparent 90%);
+    background-size: 220% 220%;
+    opacity: 0;
+    mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    mask-composite: exclude;
+    transition: opacity 200ms ease;
+  }
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 16px 36px -18px rgb(37 99 235 / 45%);
+  }
+
+  &:hover::after {
+    opacity: 1;
+    animation: action-tile-border 1.6s linear infinite;
+  }
+}
+
+@keyframes action-tile-border {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 220% 50%; }
+}
+
+@keyframes liquid-glass-shimmer {
+  0%, 100% { transform: translate3d(-18%, -8%, 0) rotate(8deg); opacity: 0.32; }
+  50% { transform: translate3d(18%, 8%, 0) rotate(8deg); opacity: 0.55; }
+}
+
+@utility animate-liquid-glass-shimmer {
+  animation: liquid-glass-shimmer 8s ease-in-out infinite;
+}
+
+.shader-container-exploded canvas {
+  width: 100% !important;
+  height: 100% !important;
+  display: block !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  border-radius: 100px !important;
+}
+@keyframes ripple-animation {
+  0% { transform: translate(-50%, -50%) scale(0); opacity: 0.6; }
+  100% { transform: translate(-50%, -50%) scale(4); opacity: 0; }
+}
+.liquid-metal-hit:focus-visible { outline: 2px solid var(--ring); outline-offset: 3px; }
+[data-current="true"] .liquid-metal-hit { outline: 2px solid var(--primary); outline-offset: 3px; }
+
+@media (max-width: 1023px) {
+  .intelligence-panel, .action-tile { backdrop-filter: none; -webkit-backdrop-filter: none; }
+  .action-tile:hover { transform: none; box-shadow: none; }
+  .action-tile:hover::after { opacity: 0; animation: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .animate-liquid-glass-shimmer, .action-tile:hover::after { animation: none; }
+  .action-tile, .action-tile::after { transition: none; }
+  .action-tile:hover { transform: none; }
+}
 @media (max-width: 639px) {
   .preloader { padding: 1rem; gap: 1rem; }
   .preloader-particle:nth-child(2n) { display: none; }
