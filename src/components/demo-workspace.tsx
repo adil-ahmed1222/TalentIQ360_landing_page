@@ -574,9 +574,6 @@ function Sidebar({
           draggable={false}
           className="h-9 w-auto max-w-11 shrink-0 object-contain"
         />
-        <span className={cn("truncate text-sm font-bold", collapsed && "md:sr-only")}>
-          Talent IQ
-        </span>
         <button
           type="button"
           className="ml-auto grid size-11 place-items-center rounded-lg md:hidden"
