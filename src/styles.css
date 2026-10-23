@@ -179,8 +179,8 @@ header nav[aria-label="Mobile navigation"] a.nav-glass::after { left: 1rem; righ
 
 /* Brand mark — the supplied TalentIQ360 logo, shown without distortion */
 .brand-lockup { display: inline-flex; align-items: center; gap: .7rem; flex-shrink: 0; line-height: 1; }
-.brand-mark { display: block; height: 2.75rem; width: calc(2.75rem * 1024 / 917); aspect-ratio: 1024 / 917; object-fit: contain; object-position: center; flex: 0 0 auto; background: transparent; }
-.brand-mark-loader { height: 72cqh; width: calc(72cqh * 1024 / 917); animation: pl-glow 1.6s ease-in-out infinite; }
+.brand-mark { display: block; height: 2.75rem; width: calc(2.75rem * 617 / 719); aspect-ratio: 617 / 719; object-fit: contain; object-position: center; flex: 0 0 auto; background: transparent; }
+.brand-mark-loader { height: 72cqh; width: calc(72cqh * 617 / 719); animation: pl-glow 1.6s ease-in-out infinite; }
 .tiq-demo-section { background: linear-gradient(180deg, #020204 0%, #080412 18%, #0c071e 32%, #140a2f 50%, #1c0e43 68%, #21114f 82%, #28135e 100%); }
 .tiq-demo { color: var(--brand-text); border-color: color-mix(in srgb, #5a3d86 42%, transparent); background: transparent; }
 .tiq-surface { background-color: transparent; }

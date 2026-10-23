@@ -17,8 +17,8 @@ export function WorkforceOverview({ onConnect }: { onConnect: () => void }) {
               <img
                 src="/images/talentiq-logo.png"
                 alt=""
-                width={1024}
-                height={917}
+                width={617}
+                height={719}
                 draggable={false}
                 className="h-12 w-auto object-contain"
               />

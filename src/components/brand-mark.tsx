@@ -11,8 +11,8 @@ export function BrandMark({
     <img
       src={logo}
       alt={alt}
-      width={1024}
-      height={917}
+      width={617}
+      height={719}
       draggable={false}
       className={loader ? "brand-mark brand-mark-loader" : "brand-mark"}
     />

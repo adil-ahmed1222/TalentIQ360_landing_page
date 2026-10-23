@@ -573,8 +573,8 @@ function Sidebar({
         <img
           src="/images/talentiq-logo.png"
           alt="TalentIQ360"
-          width={1024}
-          height={917}
+          width={617}
+          height={719}
           draggable={false}
           className="h-9 w-auto max-w-11 shrink-0 object-contain"
         />
