@@ -589,14 +589,16 @@ function Sidebar({
       <div className="space-y-4 px-2 pb-3">
         {NAV.map((group) => (
           <div key={group.label}>
-            <p
-              className={cn(
-                "px-2 pb-1 text-[10px] font-bold uppercase tracking-wide text-muted-foreground",
-                collapsed && "md:sr-only",
-              )}
-            >
-              {group.label}
-            </p>
+            {group.label !== "Talent IQ" && (
+              <p
+                className={cn(
+                  "px-2 pb-1 text-[10px] font-bold uppercase tracking-wide text-muted-foreground",
+                  collapsed && "md:sr-only",
+                )}
+              >
+                {group.label}
+              </p>
+            )}
             <ul>
               {group.items.map((item) => {
                 const Icon = item.icon;
