@@ -9,11 +9,21 @@ export function WorkforceOverview({ onConnect }: { onConnect: () => void }) {
   const showingDemo = status === "DEMO MODE" && showDemo;
 
   return (
-    <section className="section-divider py-16 md:py-24 xl:py-32">
+    <section className="tiq-demo-section section-divider py-16 md:py-24 xl:py-32">
       <div className="mx-auto w-[min(100%-2rem,1440px)] md:w-[min(100%-3rem,1440px)]">
         <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
           <div className="max-w-2xl">
-            <p className="eyebrow mb-4">Workforce overview</p>
+            <div className="mb-4 flex items-center gap-3">
+              <img
+                src="/images/talentiq-logo.png"
+                alt=""
+                width={1024}
+                height={917}
+                draggable={false}
+                className="h-12 w-auto object-contain"
+              />
+              <p className="eyebrow mb-0">Workforce overview</p>
+            </div>
             <h2 className="font-display text-3xl md:text-5xl font-bold leading-tight text-balance">
               A labeled product demonstration, until a source is connected.
             </h2>

@@ -25,6 +25,20 @@
   --border: oklch(.4 .05 270 / .42); --highlight: oklch(.74 .14 262);
   --destructive: oklch(.65 .19 24); --radius: .5rem;
   --metal-face: oklch(.16 .04 268); --metal-edge: oklch(.72 .08 270);
+  --brand-bg: #050611;
+  --brand-bg-secondary: #090b18;
+  --brand-surface: #0e1220;
+  --brand-surface-elevated: #14182a;
+  --brand-blue: #315fff;
+  --brand-electric: #1769ff;
+  --brand-cyan: #20d5ff;
+  --brand-purple: #703bff;
+  --brand-violet: #a348ff;
+  --brand-pink: #d78aff;
+  --brand-text: #f4f6ff;
+  --brand-muted: #a5adc2;
+  --brand-border: #242b40;
+  --brand-gradient: linear-gradient(135deg, #20d5ff 0%, #1769ff 30%, #703bff 68%, #d78aff 100%);
 }
 * { border-color: var(--border); }
 html { scroll-behavior: auto; scroll-padding-top: 5.5rem; background: var(--background); overflow-x: clip; }
@@ -163,10 +177,25 @@ header nav[aria-label="Mobile navigation"] a.nav-glass::after { left: 1rem; righ
 }
 @media (prefers-reduced-motion: reduce) { .reveal { opacity:1; translate:none; filter:none; } .particle, .orb { display:none; } body::before { animation:none; } .liquid-metal:hover, .liquid-metal:active { transform:none; } header nav[aria-label="Mobile navigation"] { animation: none; } header nav a.nav-glass, header nav a.nav-glass::after { transition: none; } }
 
-/* Brand mark — same cropped symbol in the nav lockup and the preloader */
+/* Brand mark — the supplied TalentIQ360 logo, shown without distortion */
 .brand-lockup { display: inline-flex; align-items: center; gap: .7rem; flex-shrink: 0; line-height: 1; }
-.brand-mark { display: block; height: 2.5rem; width: calc(2.5rem * 52 / 64); aspect-ratio: 52 / 64; object-fit: contain; object-position: center; flex: 0 0 auto; }
-.brand-mark-loader { height: 4.25rem; width: calc(4.25rem * 52 / 64); height: 68cqh; width: calc(68cqh * 52 / 64); animation: pl-glow 1.6s ease-in-out infinite; }
+.brand-mark { display: block; height: 2.75rem; width: calc(2.75rem * 1024 / 917); aspect-ratio: 1024 / 917; object-fit: contain; object-position: center; flex: 0 0 auto; background: transparent; }
+.brand-mark-loader { height: 72cqh; width: calc(72cqh * 1024 / 917); animation: pl-glow 1.6s ease-in-out infinite; }
+.tiq-demo-section { background: linear-gradient(180deg, #020204 0%, #080412 18%, #0c071e 32%, #140a2f 50%, #1c0e43 68%, #21114f 82%, #28135e 100%); }
+.tiq-demo { color: var(--brand-text); border-color: color-mix(in srgb, #5a3d86 42%, transparent); background: transparent; }
+.tiq-surface { background-color: transparent; }
+.tiq-demo header.tiq-surface { background-color: #080412; }
+.tiq-elevated { background-color: var(--brand-surface-elevated); }
+.tiq-card { background-color: var(--brand-surface); border-color: var(--brand-border); box-shadow: 0 16px 40px -32px color-mix(in srgb, var(--brand-blue) 75%, transparent); transition: border-color .2s ease, background-color .2s ease; }
+.tiq-card:hover { border-color: color-mix(in srgb, var(--brand-blue) 55%, var(--brand-border)); }
+.tiq-selected { background-image: var(--brand-gradient); color: #fff; }
+.tiq-action { background-image: var(--brand-gradient); color: #fff; transition: filter .2s ease; }
+.tiq-action:hover { filter: brightness(1.08); }
+.tiq-meter { background-image: var(--brand-gradient); }
+.tiq-demo .text-muted-foreground { color: var(--brand-muted); }
+.tiq-demo .text-highlight { color: var(--brand-cyan); }
+.tiq-demo .border-white\/10, .tiq-demo .border-white\/15 { border-color: var(--brand-border); }
+@media (prefers-reduced-motion: reduce) { .tiq-action, .tiq-card { transition: none; } .tiq-action:hover { filter: none; } }
 
 /* Preloader */
 .preloader { animation: pl-failsafe .6s ease 6s forwards; position: fixed; inset: 0; z-index: 100; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1.5rem; background: var(--background); overflow: hidden; }

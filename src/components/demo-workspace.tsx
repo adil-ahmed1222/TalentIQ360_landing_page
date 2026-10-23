@@ -317,7 +317,7 @@ export function DemoWorkspace({ onConnect }: { onConnect: () => void }) {
   );
 
   return (
-    <div className="relative mt-6 min-w-0 max-w-full overflow-x-clip rounded-2xl border border-white/10 bg-[#070b14] text-foreground md:mt-10">
+    <div className="tiq-demo relative mt-6 min-w-0 max-w-full overflow-x-clip rounded-2xl border text-foreground md:mt-10">
       <div className="flex min-w-0 flex-col items-stretch md:flex-row md:items-start">
         <Sidebar
           view={view}
@@ -327,7 +327,7 @@ export function DemoWorkspace({ onConnect }: { onConnect: () => void }) {
           onClose={() => setMobileNav(false)}
         />
         <div className="flex min-w-0 flex-1 flex-col">
-          <header className="sticky top-[4.75rem] z-20 flex min-h-14 min-w-0 items-center gap-2 border-b border-white/10 bg-[#070b14] px-2 py-2 sm:px-3">
+          <header className="tiq-surface sticky top-[4.75rem] z-20 flex min-h-14 min-w-0 items-center gap-2 border-b px-2 py-2 sm:px-3">
             <button
               type="button"
               className="grid size-11 shrink-0 place-items-center rounded-lg hover:bg-white/5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary md:hidden"
@@ -367,7 +367,7 @@ export function DemoWorkspace({ onConnect }: { onConnect: () => void }) {
                 className={cn(fieldClass, "pl-9")}
               />
               {query.trim() && (
-                <ul className="absolute z-20 mt-1 max-h-64 w-full overflow-auto rounded-lg border border-white/10 bg-[#101522] p-1 shadow-xl">
+                <ul className="tiq-elevated absolute z-20 mt-1 max-h-64 w-full overflow-auto rounded-lg border p-1 shadow-xl">
                   {peopleHits.length === 0 && (
                     <li className="px-3 py-2 text-sm text-muted-foreground">
                       No sample profiles match.
@@ -435,7 +435,7 @@ export function DemoWorkspace({ onConnect }: { onConnect: () => void }) {
           )}
           {notices && (
             <div
-              className="border-b border-white/10 bg-[#101522] px-4 py-3"
+              className="tiq-elevated border-b px-4 py-3"
               role="region"
               aria-label="Demonstration activity"
             >
@@ -457,9 +457,7 @@ export function DemoWorkspace({ onConnect }: { onConnect: () => void }) {
                 onClick={() => openView(chip.view)}
                 className={cn(
                   "min-h-11 shrink-0 rounded-lg px-3 text-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary",
-                  view === chip.view
-                    ? "bg-primary text-primary-foreground"
-                    : "text-muted-foreground hover:bg-white/5",
+                  view === chip.view ? "tiq-selected" : "text-muted-foreground hover:bg-white/5",
                 )}
                 aria-current={view === chip.view ? "page" : undefined}
               >
@@ -479,7 +477,7 @@ export function DemoWorkspace({ onConnect }: { onConnect: () => void }) {
                   <button
                     type="button"
                     onClick={newChat}
-                    className="flex min-h-11 w-full items-center justify-center gap-2 rounded-lg border border-white/15 bg-white text-sm font-semibold text-black focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+                    className="tiq-action flex min-h-11 w-full items-center justify-center gap-2 rounded-lg text-sm font-semibold focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
                   >
                     <Plus className="size-4" /> New chat
                   </button>
@@ -571,13 +569,21 @@ function Sidebar({
 }) {
   const body = (
     <nav aria-label="Demonstration" className="flex min-h-0 flex-col">
-      <div className="flex items-center justify-between px-3 py-3">
+      <div className="flex items-center gap-2 px-2.5 py-3">
+        <img
+          src="/images/talentiq-logo.png"
+          alt="TalentIQ360"
+          width={1024}
+          height={917}
+          draggable={false}
+          className="h-9 w-auto max-w-11 shrink-0 object-contain"
+        />
         <span className={cn("truncate text-sm font-bold", collapsed && "md:sr-only")}>
           Talent IQ
         </span>
         <button
           type="button"
-          className="grid size-11 place-items-center rounded-lg md:hidden"
+          className="ml-auto grid size-11 place-items-center rounded-lg md:hidden"
           aria-label="Close demonstration menu"
           onClick={onClose}
         >
@@ -608,9 +614,7 @@ function Sidebar({
                       title={item.label}
                       className={cn(
                         "flex min-h-11 w-full items-center gap-2 rounded-lg px-2 text-left text-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary",
-                        current
-                          ? "bg-primary text-primary-foreground"
-                          : "text-foreground/80 hover:bg-white/5",
+                        current ? "tiq-selected" : "text-foreground/80 hover:bg-white/5",
                       )}
                     >
                       <Icon className="size-4 shrink-0" aria-hidden="true" />
@@ -647,7 +651,7 @@ function Sidebar({
   );
   if (sheet) {
     return (
-      <div className="max-h-[min(70dvh,32rem)] overflow-y-auto overscroll-contain border-b border-white/10 bg-[#070b14] md:hidden">
+      <div className="tiq-surface max-h-[min(70dvh,32rem)] overflow-y-auto overscroll-contain border-b md:hidden">
         {body}
       </div>
     );
@@ -655,7 +659,7 @@ function Sidebar({
   return (
     <aside
       className={cn(
-        "sticky top-[4.75rem] z-10 hidden max-h-[calc(100dvh-5.5rem)] shrink-0 flex-col self-start overflow-y-auto overscroll-y-auto border-r border-white/10 bg-[#070b14] md:flex",
+        "tiq-surface sticky top-[4.75rem] z-10 hidden max-h-[calc(100dvh-5.5rem)] shrink-0 flex-col self-start overflow-y-auto overscroll-y-auto border-r md:flex",
         collapsed ? "md:w-16" : "md:w-56 lg:w-60",
       )}
     >
@@ -794,7 +798,7 @@ function ChatPane({
           <button
             type="submit"
             disabled={busy}
-            className="ml-auto inline-flex min-h-11 items-center gap-2 rounded-lg bg-primary px-4 text-sm font-semibold text-primary-foreground focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary disabled:opacity-60"
+            className="tiq-action ml-auto inline-flex min-h-11 items-center gap-2 rounded-lg px-4 text-sm font-semibold focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary disabled:opacity-60"
           >
             <Send className="size-4" /> {busy ? "Sending" : "Send"}
           </button>
@@ -959,7 +963,7 @@ function TalentView({
                 .getElementById(card.href)
                 ?.scrollIntoView({ block: "start", behavior: "auto" })
             }
-            className="rounded-xl border border-white/10 bg-white/[0.03] p-4 text-left transition-colors hover:border-primary/50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+            className="tiq-card rounded-xl border p-4 text-left hover:border-[var(--brand-blue)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
           >
             <span className="flex items-center justify-between gap-2 text-xs text-muted-foreground">
               {card.label}
@@ -1005,8 +1009,8 @@ function TalentView({
               />
               <Tooltip contentStyle={tipStyle} />
               <Legend />
-              <Bar dataKey="Delivery" fill="#4f7cff" radius={3} isAnimationActive={false} />
-              <Bar dataKey="Score" fill="#8b7cff" radius={3} isAnimationActive={false} />
+              <Bar dataKey="Delivery" fill="#315fff" radius={3} isAnimationActive={false} />
+              <Bar dataKey="Score" fill="#703bff" radius={3} isAnimationActive={false} />
             </BarChart>
           </DemoChart>
         </Panel>
@@ -1038,7 +1042,7 @@ function TalentView({
               <XAxis dataKey="name" tick={{ fill: "#d5dbed", fontSize: 11 }} />
               <YAxis tick={{ fill: "#9aa4bf", fontSize: 11 }} allowDecimals={false} />
               <Tooltip contentStyle={tipStyle} />
-              <Bar dataKey="People" fill="#4f7cff" radius={3} isAnimationActive={false} />
+              <Bar dataKey="People" fill="#315fff" radius={3} isAnimationActive={false} />
             </BarChart>
           </DemoChart>
         </Panel>
@@ -1061,7 +1065,7 @@ function TalentView({
                 type="monotone"
                 dataKey="capacityPct"
                 name="Capacity %"
-                stroke="#8b7cff"
+                stroke="#20d5ff"
                 strokeWidth={2}
                 dot={false}
                 isAnimationActive={false}
@@ -1087,7 +1091,7 @@ function TalentView({
                 </div>
                 <div className="mt-1 h-1.5 rounded-full bg-white/10" aria-hidden="true">
                   <div
-                    className="h-full rounded-full bg-primary"
+                    className="tiq-meter h-full rounded-full"
                     style={{ width: `${item.coverage}%` }}
                   />
                 </div>
@@ -1149,8 +1153,8 @@ function TalentView({
 }
 
 const tipStyle = {
-  background: "#12182a",
-  border: "1px solid rgba(255,255,255,.12)",
+  background: "#14182a",
+  border: "1px solid #242b40",
   borderRadius: 8,
   fontSize: 12,
 };
@@ -1185,10 +1189,7 @@ function Panel({
   children: ReactNode;
 }) {
   return (
-    <section
-      id={id}
-      className="min-w-0 scroll-mt-28 rounded-xl border border-white/10 bg-white/[0.03] p-4"
-    >
+    <section id={id} className="tiq-card min-w-0 scroll-mt-28 rounded-xl border p-4">
       <h3 className="font-display text-sm font-bold">{title}</h3>
       {detail && <p className="mt-1 text-xs text-muted-foreground">{detail}</p>}
       <div className="mt-4">{children}</div>
@@ -1356,7 +1357,7 @@ function ProjectsView({ onAsk }: { onAsk: (prompt: string) => void }) {
             </div>
             <div className="mt-2 h-1.5 rounded-full bg-white/10" aria-hidden="true">
               <div
-                className="h-full rounded-full bg-primary"
+                className="tiq-meter h-full rounded-full"
                 style={{ width: `${project.deliveryPct}%` }}
               />
             </div>
@@ -1581,7 +1582,7 @@ function IntegrationView({ id, onConnect }: { id: DemoView; onConnect: () => voi
         <button
           type="button"
           onClick={onConnect}
-          className="mt-4 min-h-11 rounded-lg bg-primary px-4 text-sm font-semibold text-primary-foreground focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+          className="tiq-action mt-4 min-h-11 rounded-lg px-4 text-sm font-semibold focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
         >
           Discuss connecting {item?.name}
         </button>
@@ -1666,7 +1667,7 @@ function AdminView({ view }: { view: "organization" | "users" | "permissions" | 
       </p>
       <a
         href="#pricing"
-        className="mt-4 inline-flex min-h-11 items-center rounded-lg bg-primary px-4 text-sm font-semibold text-primary-foreground focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+        className="tiq-action mt-4 inline-flex min-h-11 items-center rounded-lg px-4 text-sm font-semibold focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
       >
         View plans
       </a>

@@ -1,14 +1,20 @@
-import logo from '@/assets/talentiq360-symbol.png';
+const logo = "/images/talentiq-logo.png";
 
-export function BrandMark({ loader = false }: { loader?: boolean }) {
+export function BrandMark({
+  loader = false,
+  alt = "TalentIQ360",
+}: {
+  loader?: boolean;
+  alt?: string;
+}) {
   return (
     <img
       src={logo}
-      alt=""
-      width={52}
-      height={64}
+      alt={alt}
+      width={1024}
+      height={917}
       draggable={false}
-      className={loader ? 'brand-mark brand-mark-loader' : 'brand-mark'}
+      className={loader ? "brand-mark brand-mark-loader" : "brand-mark"}
     />
   );
 }

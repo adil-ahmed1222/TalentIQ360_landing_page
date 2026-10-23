@@ -100,7 +100,7 @@ export function homeHead() {
 }
 
 function Brand() {
-  return <a href="#top" className="brand-lockup" aria-label="TalentIQ360 home"><BrandMark /><span className="font-display font-extrabold leading-none text-lg min-[380px]:text-xl">Talent<span className="text-primary">IQ</span>360</span></a>;
+  return <a href="#top" className="brand-lockup" aria-label="TalentIQ360 home"><BrandMark alt="" /><span className="font-display font-extrabold leading-none text-lg min-[380px]:text-xl">Talent<span className="text-primary">IQ</span>360</span></a>;
 }
 function SectionHeading({ label, title, description, center = false }: { label: string; title: string; description?: string; center?: boolean }) {
   return <div className={`${center ? 'text-center mx-auto' : 'text-left'} max-w-3xl`}><p className="eyebrow mb-4">{label}</p><h2 className="font-display text-3xl md:text-5xl font-bold leading-tight text-balance">{title}</h2>{description && <p className="text-muted-foreground mt-5 text-base md:text-lg leading-relaxed">{description}</p>}</div>;
