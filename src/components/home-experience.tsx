@@ -3,6 +3,7 @@ import { lazy, Suspense, useEffect, useState, type FormEvent } from 'react';
 import { ArrowRight, ArrowUpRight, Check, ChevronDown, CircleDot, Github, Layers3, Menu, Sparkles, X, BrainCircuit, ChartNoAxesCombined, UsersRound, Target, HeartPulse, Gauge, TrendingUp, LayoutDashboard, Lightbulb, CalendarDays } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { BrandMark } from '@/components/brand-mark';
+import { publicSiteUrl } from '@/lib/site-url';
 import { supabase } from '@/integrations/supabase/client';
 import { PremiumEffects, HeroAtmosphere } from '@/components/premium-effects';
 import { Preloader } from '@/components/preloader';
@@ -32,7 +33,7 @@ const integrations: { name: string; status: string }[] = [
   ['GitLab', 'Custom scope'], ['Bitbucket', 'Custom scope'], ['Asana', 'Custom scope'], ['Monday.com', 'Custom scope'],
   ['Trello', 'Custom scope'], ['HubSpot', 'Custom scope'], ['Salesforce', 'Custom scope'], ['Notion', 'Custom scope'],
   ['Google Sheets', 'Custom scope'], ['Excel', 'Custom scope'], ['CSV Uploads', 'Custom scope'],
-].map(([name, status]) => ({ name, status }));
+].map(([name, status]) => ({ name: name ?? '', status: status ?? '' }));
 const steps = ['Agree the scope', 'Authorize access', 'Review signals', 'Discuss insights', 'Decide with your team'];
 const plans = [
   { name: 'Core Intelligence', audience: 'For smaller companies beginning their workforce intelligence journey.', price: 'AED 999', amount: '999', cadence: '/ month', employees: 'Up to 100 employees', integrations: 'Up to 3 supported integrations', support: 'Standard support', summary: 'Build a clearer understanding of your workforce with essential analytics and talent intelligence.', cta: 'Get Started', checkout: 'core', popular: false, note: '', features: ['Employee scoring and basic talent intelligence', 'Workforce dashboard', 'Performance analytics', 'Human review of insights'] },
@@ -75,10 +76,10 @@ export function homeHead() {
       { property: 'og:title', content: 'TalentIQ360 | AI-Powered Workforce Intelligence' },
       { property: 'og:description', content: description },
       { property: 'og:type', content: 'website' },
-      { property: 'og:url', content: 'https://talent-iq-360-landing-page.vercel.app/' },
+      { property: 'og:url', content: `${publicSiteUrl()}/` },
       { name: 'twitter:card', content: 'summary_large_image' },
     ],
-    links: [{ rel: 'canonical', href: 'https://talent-iq-360-landing-page.vercel.app/' }],
+    links: [{ rel: 'canonical', href: `${publicSiteUrl()}/` }],
     scripts: [{
       type: 'application/ld+json',
       children: JSON.stringify({

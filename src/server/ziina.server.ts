@@ -12,18 +12,33 @@ type ZiinaIntent = {
 };
 
 function ziinaKey() {
-  const key = process.env.ZIINA_API_KEY?.trim();
+  const key = process.env['ZIINA_API_KEY']?.trim();
   if (!key) throw new Error('Ziina is not configured.');
   return key;
+}
+
+function configuredSiteHostname() {
+  const raw = process.env['SITE_URL']?.trim();
+  if (!raw) return null;
+  try {
+    const url = new URL(raw);
+    if (url.protocol !== 'https:') return null;
+    return url.hostname;
+  } catch {
+    return null;
+  }
 }
 
 function privateHost(hostname: string) {
   if (hostname === 'localhost' || hostname === '127.0.0.1' || hostname === '[::1]') return true;
   const parts = hostname.split('.').map(Number);
   if (parts.length !== 4 || parts.some((part) => !Number.isInteger(part) || part < 0 || part > 255)) return false;
-  if (parts[0] === 10 || parts[0] === 127) return true;
-  if (parts[0] === 192 && parts[1] === 168) return true;
-  return parts[0] === 172 && parts[1] >= 16 && parts[1] <= 31;
+  const a = parts[0];
+  const b = parts[1];
+  if (a === undefined || b === undefined) return false;
+  if (a === 10 || a === 127) return true;
+  if (a === 192 && b === 168) return true;
+  return a === 172 && b >= 16 && b <= 31;
 }
 
 function allowedOrigin(value: string) {
@@ -34,7 +49,8 @@ function allowedOrigin(value: string) {
     return null;
   }
   const local = url.protocol === 'http:' && privateHost(url.hostname);
-  const production = url.protocol === 'https:' && url.hostname === 'talent-iq-360-landing-page.vercel.app';
+  const siteHost = configuredSiteHostname();
+  const production = url.protocol === 'https:' && (url.hostname === 'talent-iq-360-landing-page.vercel.app' || (siteHost !== null && url.hostname === siteHost));
   if (!local && !production) return null;
   return url.origin;
 }
@@ -75,7 +91,7 @@ export async function createZiinaPayment(input: { planId: string; origin: string
   const origin = allowedOrigin(input.origin);
   if (!origin) return { error: 'Checkout cannot start from this address.' };
   const plan = CHECKOUT_PLANS[input.planId];
-  const test = process.env.ZIINA_TEST_MODE === 'true';
+  const test = process.env['ZIINA_TEST_MODE'] === 'true';
   try {
     const { response, body } = await ziinaFetch(ZIINA_PAYMENT_INTENT, {
       method: 'POST',

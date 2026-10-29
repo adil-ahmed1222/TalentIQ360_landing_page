@@ -39,10 +39,10 @@ function browserPublicConfig() {
 
 function createSupabaseClient() {
   // Dot access is required so Vite can inline VITE_ variables into the browser bundle.
-  const env = typeof process === 'undefined' ? {} : process.env;
+  const env = typeof process === 'undefined' ? undefined : process.env;
   const browser = browserPublicConfig();
-  const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL || env.SUPABASE_URL || env.VITE_SUPABASE_URL || browser.url;
-  const SUPABASE_PUBLISHABLE_KEY = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY || env.SUPABASE_PUBLISHABLE_KEY || env.VITE_SUPABASE_PUBLISHABLE_KEY || browser.key;
+  const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL || env?.['SUPABASE_URL'] || env?.['VITE_SUPABASE_URL'] || browser.url;
+  const SUPABASE_PUBLISHABLE_KEY = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY || env?.['SUPABASE_PUBLISHABLE_KEY'] || env?.['VITE_SUPABASE_PUBLISHABLE_KEY'] || browser.key;
 
   if (!SUPABASE_URL || !SUPABASE_PUBLISHABLE_KEY) {
     const missing = [

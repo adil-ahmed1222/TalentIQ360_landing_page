@@ -30,5 +30,8 @@ ZIINA_TEST_MODE=false
 ## Scripts
 
 - `npm run dev` starts the local site
-- `npm run build` creates a production build
-- `npm run preview` serves the production build
+- `npm run build` creates the production Node.js server
+- `npm start` runs that server after a build
+- `npm run preview` serves a Vite preview of the client build
+
+Hostinger needs the Node.js server. See `HOSTINGER_DEPLOYMENT.md`. Node.js 20.19 or newer is required.

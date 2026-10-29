@@ -5,12 +5,13 @@ import { verifyZiinaPayment } from '@/server/ziina.functions';
 
 export const Route = createFileRoute('/checkout/result')({
   validateSearch: (search: Record<string, unknown>) => ({
-    payment_intent_id: typeof search.payment_intent_id === 'string' ? search.payment_intent_id : '',
+    payment_intent_id: typeof search['payment_intent_id'] === 'string' ? search['payment_intent_id'] : '',
   }),
   head: () => ({
     meta: [
       { title: 'Payment | TalentIQ360' },
       { name: 'description', content: 'Ziina payment result for TalentIQ360. A payment is confirmed only after Ziina reports it as completed.' },
+      { name: 'robots', content: 'noindex' },
     ],
   }),
   component: CheckoutResult,
@@ -38,7 +39,7 @@ function CheckoutResult() {
           setState('error');
           return;
         }
-        setAmount(result.amountAed);
+        setAmount(typeof result.amountAed === 'number' ? result.amountAed : null);
         if (result.status === 'completed') setState('completed');
         else if (result.status === 'canceled') setState('canceled');
         else if (result.status === 'failed') setState('failed');
