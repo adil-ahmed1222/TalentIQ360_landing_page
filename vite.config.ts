@@ -14,7 +14,7 @@ export default defineConfig({
     }),
     viteReact(),
     nitro({
-      preset: "node-server",
+      preset: process.env.VERCEL ? "vercel" : "node-server",
       routeRules: {
         "/**": {
           headers: {
